@@ -1,0 +1,28 @@
+<div class="filter-panel">
+
+  <h3>Filters</h3>
+
+  <div class="form-group">
+    <label>Category</label>
+
+    <select [(ngModel)]="selectedCategory">
+      <option value="">All</option>
+      <option value="Mobile">Mobile</option>
+      <option value="Laptop">Laptop</option>
+      <option value="Headphone">Headphone</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Max Price</label>
+
+    <input
+      type="number"
+      [(ngModel)]="maxPrice">
+  </div>
+
+  <button (click)="applyFilter()">
+    Apply Filter
+  </button>
+
+</div>

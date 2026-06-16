@@ -1,0 +1,36 @@
+<div class="success-container">
+
+  <div class="success-card">
+
+    <div class="success-icon">
+      ✓
+    </div>
+
+    <h1>Payment Successful!</h1>
+
+    <p class="message">
+      Thank you for your purchase.
+    </p>
+
+    <div class="order-info" *ngIf="orderId">
+      <strong>Order ID:</strong>
+      {{ orderId }}
+    </div>
+
+    <div class="buttons">
+
+      <button class="btn-primary"
+              (click)="viewOrders()">
+        View Orders
+      </button>
+
+      <button class="btn-secondary"
+              (click)="continueShopping()">
+        Continue Shopping
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

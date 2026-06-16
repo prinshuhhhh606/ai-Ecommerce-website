@@ -1,0 +1,59 @@
+
+
+<div class="products-container">
+
+  <div
+    class="product-card"
+    *ngFor="let product of products"
+  >
+
+    <img
+      [src]="product.thumbnail"
+      [alt]="product.title"
+    >
+
+    <h3>{{ product.title }}</h3>
+
+    <p class="price">
+      ₹ {{ product.price }}
+    </p>
+
+    <p class="category">
+      {{ product.category }}
+    </p>
+
+    <button
+      class="buy-btn"
+      (click)="buyNow(product)"
+    >
+      Buy Now
+    </button>
+
+  </div>
+
+</div>
+
+<div class="pagination-container">
+
+  <button
+    class="page-btn"
+    (click)="previousPage()"
+    [disabled]="currentPage === 1"
+  >
+    Previous
+  </button>
+
+  <span class="page-info">
+    Page {{ currentPage }}
+  </span>
+
+  <button
+    class="page-btn"
+    (click)="nextPage()"
+    [disabled]="currentPage === totalPages"
+  >
+    Next
+  </button>
+
+</div>
+

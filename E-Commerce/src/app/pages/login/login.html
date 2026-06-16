@@ -1,0 +1,45 @@
+<div class="login-container">
+
+  <div class="login-card">
+
+    <div class="login-header">
+      <h1>ShopEase</h1>
+      <p>Welcome Back</p>
+    </div>
+
+    <form [formGroup]="logControl" (ngSubmit)="Login()">
+
+      <div class="input-group">
+        <label>Email</label>
+        <input
+          type="email"
+          placeholder="Enter your email"
+          formControlName="email"
+        />
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input
+          type="password"
+          placeholder="Enter your password"
+          formControlName="password"
+        />
+      </div>
+
+      <button type="submit" class="login-btn">
+        Login
+      </button>
+
+    </form>
+
+    <div class="login-footer">
+      <p>
+        Don't have an account?
+        <a href="#">Register</a>
+      </p>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,66 @@
+<div class="orders-page">
+
+  <div class="page-header">
+    <h1>My Orders</h1>
+    <p class="sub-text">Track and manage all your purchases</p>
+    <span class="count-badge">Total Orders: {{ orders.length }}</span>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="orders.length === 0" class="empty-state">
+    <img src="assets/empty-orders.png" alt="No Orders" />
+    <h3>No Orders Found</h3>
+    <p>You haven’t placed any orders yet.</p>
+    <button class="shop-btn">Start Shopping</button>
+  </div>
+
+  <!-- Orders List -->
+  <div *ngFor="let order of orders" class="order-card">
+
+    <div class="order-top">
+
+      <div>
+        <h3>Order #{{ order._id | slice:0:10 }}...</h3>
+        <p class="date">
+          {{ order.createdAt | date:'mediumDate' }}
+        </p>
+      </div>
+
+      <span class="status" [ngClass]="order.status">
+        {{ order.status }}
+      </span>
+
+    </div>
+
+    <div class="order-summary">
+      <p><strong>Total:</strong> ₹{{ order.totalAmount }}</p>
+      <p><strong>Items:</strong> {{ order.items.length }}</p>
+    </div>
+
+    <!-- Items -->
+    <div class="items-container">
+
+      <div *ngFor="let item of order.items" class="item">
+
+        <img [src]="item.thumbnail" [alt]="item.title" />
+
+        <div class="item-info">
+          <h4>{{ item.title }}</h4>
+
+          <div class="meta">
+            <span>{{ item.category }}</span>
+            <span>Qty: {{ item.quantity }}</span>
+          </div>
+
+          <div class="price">
+            ₹{{ item.price }}
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

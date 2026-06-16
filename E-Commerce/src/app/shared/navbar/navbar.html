@@ -1,0 +1,23 @@
+<nav class="navbar">
+  <div class="logo">
+    <a href="#">ShopEase</a>
+  </div>
+
+  <div class="search-box">
+    <input type="text" placeholder="Search products..." [formControl]="product" />
+    <button (click)="search()">🔍</button>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Products</a></li>
+    <li><a href="#">Categories</a></li>
+    <li><a href="#">Orders</a></li>
+    <button routerLink="/ai-search" (click)="AIsearch()">AI Search</button>
+  </ul>
+
+  <div class="nav-icons">
+    <span class="cart" (click)="cart()">🛒 <small>{{ cartService.getCartItems().length }}</small></span>
+    <span class="user" (click)="Login()">👤</span>
+  </div>
+</nav>

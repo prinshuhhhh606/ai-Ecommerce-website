@@ -1,0 +1,84 @@
+.search-container {
+  margin: 40px auto;
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #f0f4ff, #fdfbff);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.search-container h2 {
+  margin-bottom: 15px;
+  color: #3b3bff;
+  font-weight: 700;
+}
+
+input {
+  width: 70%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  outline: none;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+input:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 8px rgba(108, 99, 255, 0.3);
+}
+
+button {
+  padding: 12px 18px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #6c63ff, #3b3bff);
+  color: white;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(59, 59, 255, 0.3);
+}
+
+.result-card {
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 16px;
+  width: 320px;
+  text-align: center;
+  background: white;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+}
+
+.result-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.result-card img {
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: 0.3s;
+}
+
+.result-card img:hover {
+  transform: scale(1.05);
+}
+
+.result-card h3 {
+  color: #333;
+  margin: 8px 0;
+}
+
+.result-card p {
+  color: #666;
+  font-size: 14px;
+}
