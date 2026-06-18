@@ -1,0 +1,40 @@
+<div class="register-container">
+
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+
+    <h2>Create Account</h2>
+
+    <p class="subtitle">
+      Join ShopEase and start shopping
+    </p>
+
+    <input
+      type="text"
+      placeholder="Full Name"
+      formControlName="name"
+    />
+
+    <input
+      type="email"
+      placeholder="Email Address"
+      formControlName="email"
+    />
+
+    <input
+      type="password"
+      placeholder="Password"
+      formControlName="password"
+    />
+
+    <button type="submit">
+      Create Account
+    </button>
+
+    <div class="login-link">
+      Already have an account?
+      <a routerLink="/login">Login</a>
+    </div>
+
+  </form>
+
+</div>

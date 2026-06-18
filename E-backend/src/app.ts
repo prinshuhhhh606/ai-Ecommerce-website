@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import Order from "./models/order";
 import connectDB from "./config/db";
+import authRoutes from './routes/authRoutes'
 
 dotenv.config();
 const app: Application = express();
@@ -12,11 +13,11 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use("/api/auth", authRoutes);
 // CREATE ORDER (DB)
 
 
-app.post("/orders", async (req, res) => {
+app.post("/api/orders", async (req, res) => {
   try {
     const order = await Order.create(req.body);
 
@@ -29,7 +30,7 @@ app.post("/orders", async (req, res) => {
 });
 
 // GET ORDERS (DB)
-app.get("/orders", async (req, res) => {
+app.get("/api/orders", async (req, res) => {
   const orders = await Order.find();
   res.json(orders);
 });

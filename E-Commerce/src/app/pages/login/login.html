@@ -11,6 +11,7 @@
 
       <div class="input-group">
         <label>Email</label>
+
         <input
           type="email"
           placeholder="Enter your email"
@@ -20,6 +21,7 @@
 
       <div class="input-group">
         <label>Password</label>
+
         <input
           type="password"
           placeholder="Enter your password"
@@ -36,7 +38,11 @@
     <div class="login-footer">
       <p>
         Don't have an account?
-        <a href="#">Register</a>
+
+        <a (click)="register()">
+          Register
+        </a>
+
       </p>
     </div>
 

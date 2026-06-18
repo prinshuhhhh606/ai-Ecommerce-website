@@ -41,6 +41,10 @@ export class Navbar {
     this.router.navigate(['/cart']);
   }
 
+  wishlist() {
+    this.router.navigate(['/wishlist']);
+  }
+
   AIsearch() {
     this.router.navigate(['/ai-search']);
   }

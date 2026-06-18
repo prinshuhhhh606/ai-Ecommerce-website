@@ -1,19 +1,27 @@
-import { Router } from "express";
+import Order from "../models/order";
 
-const router = Router();
+export const createOrder = async (req: any, res: any) => {
+  try {
+    const { items, totalAmount } = req.body;
 
-router.post("/orders", (req, res) => {
-  const order = {
-    _id: `ORD_${Date.now()}`,
-    ...req.body,
-    createdAt: new Date(),
-  };
+    const order = await Order.create({
+      items,
+      totalAmount,
+      status: "Pending",
+    });
 
-  res.status(201).json(order);
-});
+    res.status(201).json(order);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
 
-router.get("/orders", (req, res) => {
-  res.status(200).json([]);
-});
+export const getOrders = async (req: any, res: any) => {
+  try {
+    const orders = await Order.find();
 
-export default router;
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};

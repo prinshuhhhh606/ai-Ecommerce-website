@@ -12,6 +12,8 @@ import { ProductCardComponent } from './Components/product-card/product-card';
 import { ProductListComponent } from './Components/product-list/product-list';
 import { AIProductSearchComponent } from './features/ai-shopping-assistant/ai-shopping-assistant';
 import { OrderSuccessComponent } from './pages/order-success/order-success';
+import { RegisterComponent } from './pages/register/register';
+import { Wishlist } from './pages/wishlist/wishlist';
 
 export const routes: Routes = [
   {
@@ -57,5 +59,13 @@ export const routes: Routes = [
   {
     path: 'order-success',
     component: OrderSuccessComponent,
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+  {
+    path: 'wishlist',
+    component: Wishlist
   }
 ];
