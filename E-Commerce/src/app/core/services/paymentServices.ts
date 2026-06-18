@@ -16,7 +16,7 @@ export interface PaymentRequest {
   providedIn: 'root',
 })
 export class PaymentService {
-  private apiUrl = 'http://localhost:5000';
+  private apiUrl = 'https://ai-ecommerce-website-2yam.onrender.com';
 
   constructor(private http: HttpClient) {}
 
