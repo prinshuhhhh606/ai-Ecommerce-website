@@ -2,11 +2,12 @@ import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@
 import { OrderService } from '../../core/services/order.service';
 import { Order } from '../../models/orderModel';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './orders.html',
   styleUrls: ['./orders.css'],
@@ -27,13 +28,17 @@ export class OrdersComponent implements OnInit {
     this.orderService.getOrders().subscribe({
       next: (res: any) => {
         console.log('ORDERS =>', res);
-        console.log('COUNT =>', res.length);
 
-        this.orders = res;
-        this.cdr.detectChanges();
+        this.orders = Array.isArray(res) ? res : [];
+
+        console.log('COUNT =>', this.orders.length);
+
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('GET ORDERS ERROR =>', err);
+        this.orders = [];
+        this.cdr.markForCheck();
       },
     });
   }

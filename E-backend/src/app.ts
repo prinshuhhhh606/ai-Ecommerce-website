@@ -1,65 +1,65 @@
 import express, { Application } from "express";
+import dotenv from "dotenv";
 import cors from "cors";
-import orderRouter from "./routes/orderRoutes";
+import Order from "./models/order";
+import connectDB from "./config/db";
 
+dotenv.config();
 const app: Application = express();
+
+connectDB();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const orders: any[] = [];
+// CREATE ORDER (DB)
 
 
-app.post("/orders", (req, res) => {
-  const order = {
-    _id: `ORD_${Date.now()}`,
-    ...req.body,
-    createdAt: new Date(),
-  };
+app.post("/orders", async (req, res) => {
+  try {
+    const order = await Order.create(req.body);
 
-  orders.push(order);
+    console.log("ORDER SAVED =>", order);
 
-  console.log("ORDER SAVED =>", order);
-
-  res.status(201).json(order);
+    res.status(201).json(order);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
 });
 
-app.get("/orders", (req, res) => {
-  console.log("ALL ORDERS =>", orders);
-
+// GET ORDERS (DB)
+app.get("/orders", async (req, res) => {
+  const orders = await Order.find();
   res.json(orders);
 });
 
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "Fake Payment API Running",
+    message: "API Running with MongoDB 🚀",
   });
 });
 
-// CREATE PAYMENT
+// PAYMENT (same ok)
 app.post("/create-payment", (req, res) => {
   const { amount, customer } = req.body;
 
-  res.status(201).json({
+  res.json({
     success: true,
     paymentId: `PAY_${Date.now()}`,
     status: "SUCCESS",
     amount,
     customer,
-    transactionDate: new Date(),
     message: "Payment Successful",
   });
 });
 
-// GET PAYMENT BY ID
 app.get("/payment/:id", (req, res) => {
-  res.status(200).json({
+  res.json({
     success: true,
     paymentId: req.params.id,
     status: "SUCCESS",
-    message: "Payment Found",
   });
 });
 

@@ -3,61 +3,81 @@
   <div class="page-header">
     <h1>My Orders</h1>
     <p class="sub-text">Track and manage all your purchases</p>
-    <span class="count-badge">Total Orders: {{ orders.length }}</span>
+
+    <span class="count-badge">
+      Total Orders: {{ orders?.length ?? 0 }}
+    </span>
   </div>
 
   <!-- Empty State -->
-  <div *ngIf="orders.length === 0" class="empty-state">
-   <img
-  src="https://cdn-icons-png.flaticon.com/512/7486/7486804.png"
-  alt="No Orders"
-/>
+  <div *ngIf="!orders || orders.length === 0" class="empty-state">
+
+    <img
+      src="https://cdn-icons-png.flaticon.com/512/7486/7486804.png"
+      alt="No Orders"
+    />
+
     <h3>No Orders Found</h3>
     <p>You haven’t placed any orders yet.</p>
+
     <button class="shop-btn">Start Shopping</button>
+
   </div>
 
   <!-- Orders List -->
-  <div *ngFor="let order of orders" class="order-card">
+  <div *ngFor="let order of (orders || [])" class="order-card">
 
     <div class="order-top">
 
       <div>
-        <h3>Order #{{ order._id | slice:0:10 }}...</h3>
+        <h3>
+          Order #{{ order._id ? (order._id | slice:0:10) : 'N/A' }}...
+        </h3>
+
         <p class="date">
-          {{ order.createdAt | date:'mediumDate' }}
+          {{ order.createdAt ? (order.createdAt | date:'mediumDate') : 'No Date' }}
         </p>
       </div>
 
-      <span class="status" [ngClass]="order.status">
-        {{ order.status }}
+      <span class="status" [ngClass]="order.status || 'pending'">
+        {{ order.status || 'pending' }}
       </span>
 
     </div>
 
     <div class="order-summary">
-      <p><strong>Total:</strong> ₹{{ order.totalAmount }}</p>
-      <p><strong>Items:</strong> {{ order.items.length }}</p>
+      <p>
+        <strong>Total:</strong> ₹{{ order.totalAmount || 0 }}
+      </p>
+
+      <p>
+        <strong>Items:</strong> {{ order.items?.length ?? 0 }}
+      </p>
     </div>
 
     <!-- Items -->
     <div class="items-container">
 
-      <div *ngFor="let item of order.items" class="item">
+      <div *ngFor="let item of (order.items || [])" class="item">
 
-        <img [src]="item.thumbnail" [alt]="item.title" />
+        <img
+          [src]="item.thumbnail || 'https://via.placeholder.com/100'"
+          [alt]="item.title || 'Product'"
+        />
 
         <div class="item-info">
-          <h4>{{ item.title }}</h4>
+
+          <h4>{{ item.title || 'No Title' }}</h4>
 
           <div class="meta">
-            <span>{{ item.category }}</span>
-            <span>Qty: {{ item.quantity }}</span>
+            <span>{{ item.category || 'General' }}</span>
+            <span>Qty: {{ item.quantity || 1 }}</span>
           </div>
 
           <div class="price">
-            ₹{{ item.price }}
+            ₹{{ item.price || 0 }}
           </div>
+
         </div>
 
       </div>
