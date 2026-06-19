@@ -15,6 +15,8 @@ import { FormsModule } from '@angular/forms';
 export class OrdersComponent implements OnInit {
   orders: Order[] = [];
 
+  trackingSteps = ['Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered'];
+
   constructor(
     private orderService: OrderService,
     private cdr: ChangeDetectorRef,
@@ -29,7 +31,7 @@ export class OrdersComponent implements OnInit {
       next: (res: any) => {
         console.log('ORDERS =>', res);
 
-        this.orders = Array.isArray(res) ? res : [];
+        this.orders = Array.isArray(res) ? res : res.orders || [];
 
         console.log('COUNT =>', this.orders.length);
 
@@ -41,5 +43,9 @@ export class OrdersComponent implements OnInit {
         this.cdr.markForCheck();
       },
     });
+  }
+
+  isStepActive(currentStatus: string, step: string): boolean {
+    return this.trackingSteps.indexOf(currentStatus) >= this.trackingSteps.indexOf(step);
   }
 }

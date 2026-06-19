@@ -4,25 +4,26 @@
     <h1>My Orders</h1>
     <p class="sub-text">Track and manage all your purchases</p>
 
-```
+
 <span class="count-badge">
   Total Orders: {{ orders.length }}
 </span>
-```
+
 
   </div>
 
   <!-- Empty State -->
 
-  <div *ngIf="!orders || orders.length === 0" class="empty-state">
+  <div *ngIf="orders.length === 0" class="empty-state">
 
-```
+
 <img
   src="https://cdn-icons-png.flaticon.com/512/7486/7486804.png"
   alt="No Orders"
 />
 
 <h3>No Orders Found</h3>
+
 <p>You haven’t placed any orders yet.</p>
 
 <button class="shop-btn">
@@ -32,30 +33,31 @@
 
   </div>
 
-  <!-- Orders List -->
+  <!-- Orders -->
 
-  <div *ngFor="let order of orders" class="order-card">
-
-```
+  <div
+    *ngFor="let order of orders"
+    class="order-card"
+  >
 <div class="order-top">
 
   <div>
 
     <h3>
-      Order #{{ order?._id ? (order._id | slice:0:10) : 'N/A' }}
+      Order #{{ order._id ? (order._id | slice:0:10) : 'N/A' }}
     </h3>
 
     <p class="date">
-      {{ order?.createdAt ? (order.createdAt | date:'mediumDate') : 'No Date' }}
+      {{ order.createdAt ? (order.createdAt | date:'mediumDate') : 'No Date' }}
     </p>
 
   </div>
 
   <span
     class="status"
-    [ngClass]="order?.status || 'pending'"
+    [ngClass]="order.status"
   >
-    {{ order?.status || 'Pending' }}
+    {{ order.status || 'Pending' }}
   </span>
 
 </div>
@@ -64,48 +66,64 @@
 
   <p>
     <strong>Total:</strong>
-    ₹{{ order?.totalAmount || 0 }}
+    ₹{{ order.totalAmount || 0 }}
   </p>
 
- <p>
-  <strong>Items:</strong>
-  {{ (order.items || []).length }}
-</p>
+  <p>
+    <strong>Items:</strong>
+    {{ order.items.length || 0 }}
+  </p>
+
 </div>
 
-<!-- Items -->
+<!-- TRACKING -->
+
+<div class="tracking">
+
+  <div
+    *ngFor="let step of trackingSteps"
+    class="step"
+    [class.active]="isStepActive(order.status || 'Pending', step)"
+  >
+    {{ step }}
+  </div>
+
+</div>
+
+<!-- ITEMS -->
+
 <div class="items-container">
 
   <div
-    *ngFor="let item of (order?.items || [])"
+    *ngFor="let item of order.items"
     class="item"
   >
 
     <img
-      [src]="item?.thumbnail || 'https://via.placeholder.com/100'"
-      [alt]="item?.title || 'Product'"
+      [src]="item.thumbnail || 'https://via.placeholder.com/100'"
+      [alt]="item.title"
     />
 
     <div class="item-info">
 
       <h4>
-        {{ item?.title || 'No Title' }}
+        {{ item.title }}
       </h4>
 
       <div class="meta">
 
         <span>
-          {{ item?.category || 'General' }}
+          {{ item.category }}
         </span>
 
         <span>
-          Qty: {{ item?.quantity || 1 }}
+          Qty: {{ item.quantity }}
         </span>
 
       </div>
 
       <div class="price">
-        ₹{{ item?.price || 0 }}
+        ₹{{ item.price }}
       </div>
 
     </div>
@@ -113,7 +131,6 @@
   </div>
 
 </div>
-
 
   </div>
 

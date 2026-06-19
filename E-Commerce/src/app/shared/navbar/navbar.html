@@ -1,28 +1,78 @@
 <nav class="navbar">
+
+  <!-- Logo -->
   <div class="logo">
-    <a href="#">ShopEase</a>
+    <a routerLink="/">ShopEase</a>
   </div>
 
+  <!-- Search -->
   <div class="search-box">
-    <input type="text" placeholder="Search products..." [formControl]="product" />
-    <button (click)="search()">🔍</button>
+    <input
+      type="text"
+      placeholder="Search products..."
+      [formControl]="product"
+    />
+
+    <button (click)="search()">
+      🔍
+    </button>
   </div>
 
+  <!-- Menu -->
   <ul class="nav-links">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Products</a></li>
-    <li><a href="#">Categories</a></li>
-    <li><a href="#">Orders</a></li>
+
+    <li><a routerLink="/">Home</a></li>
+
+    <li><a routerLink="/product">Products</a></li>
+
+    <li><a>Categories</a></li>
+
+    <li><a routerLink="/my-orders">Orders</a></li>
+
     <li>
-  <a (click)="wishlist()">
-    ❤️ Wishlist 
-  </a>
-</li>
-    <button routerLink="/ai-search" (click)="AIsearch()">AI Search</button>
+      <a (click)="wishlist()">
+        ❤️ Wishlist
+      </a>
+    </li>
+
+    <li>
+      <a (click)="AIsearch()">
+        🤖 AI Search
+      </a>
+    </li>
+
   </ul>
 
+  <!-- Right Side -->
   <div class="nav-icons">
-    <span class="cart" (click)="cart()">🛒 <small>{{ cartService.getCartItems().length }}</small></span>
-    <span class="user" (click)="Login()">👤</span>
+
+    <div
+      class="cart"
+      (click)="cart()"
+    >
+      🛒
+
+      <span class="cart-count">
+        {{ cartService.getCartItems().length }}
+      </span>
+    </div>
+
+    <button
+      class="login-btn"
+      *ngIf="!isLoggedIn"
+      (click)="Login()"
+    >
+      👤 Login
+    </button>
+
+    <button
+      class="logout-btn"
+      *ngIf="isLoggedIn"
+      (click)="logout()"
+    >
+      🚪 Logout
+    </button>
+
   </div>
+
 </nav>

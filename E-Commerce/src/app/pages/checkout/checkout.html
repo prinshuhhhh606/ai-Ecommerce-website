@@ -1,11 +1,67 @@
-<div class="checkout-container">
-  <h2 class="checkout-title">Checkout</h2>
+<section class="checkout-section">
 
-  <p class="total-amount">
-    Total Amount: ₹{{ totalAmount }}
-  </p>
+  <div class="checkout-container">
 
-  <button class="pay-btn" (click)="payNow()">
-    Pay Now
-  </button>
-</div>
+    <div class="checkout-header">
+
+      <span class="checkout-badge">
+        🔒 Secure Checkout
+      </span>
+
+      <h1 class="checkout-title">
+        Complete Your Order
+      </h1>
+
+      <p class="checkout-subtitle">
+        Review your payment details and proceed securely.
+      </p>
+
+    </div>
+
+    <div class="summary-card">
+
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>₹{{ totalAmount }}</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span>Free</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Tax</span>
+        <span>Included</span>
+      </div>
+
+      <div class="total-row">
+        <span>Total Amount</span>
+        <span class="total-price">
+          ₹{{ totalAmount }}
+        </span>
+      </div>
+
+    </div>
+
+    <button
+      class="pay-btn"
+      (click)="payNow()"
+    >
+      Proceed To Payment →
+    </button>
+
+    <button
+      class="continue-btn"
+      routerLink="/"
+    >
+      Continue Shopping
+    </button>
+
+    <p class="secure-text">
+      🔐 100% Secure Payment Protected
+    </p>
+
+  </div>
+
+</section>

@@ -1,0 +1,15 @@
+:host {
+  display: block;
+
+  min-height: 100vh;
+
+  background: #f8fafc;
+}
+
+/* Space Between Banner & Products */
+
+app-pagination {
+  display: block;
+
+  margin-top: 20px;
+}

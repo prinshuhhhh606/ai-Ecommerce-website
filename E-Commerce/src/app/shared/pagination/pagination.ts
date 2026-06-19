@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -12,11 +13,11 @@ import { CartService } from '../../core/services/cart.services';
   templateUrl: './pagination.html',
   styleUrls: ['./pagination.css'],
 })
-export class Pagination implements OnInit {
+export class PaginationComponent implements OnInit {
   products: any[] = [];
 
   currentPage = 1;
-  limit = 10;
+  limit = 12;
   totalPages = 0;
 
   constructor(
@@ -28,20 +29,12 @@ export class Pagination implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('Pagination Loaded');
-
     this.route.queryParams.subscribe((params) => {
-      console.log('Params:', params);
-
       const searchText = params['search'];
 
       if (searchText) {
-        console.log('Search Text:', searchText);
-
         this.searchProducts(searchText);
       } else {
-        console.log('Loading Products');
-
         this.loadProducts();
       }
     });
@@ -50,37 +43,68 @@ export class Pagination implements OnInit {
   loadProducts(): void {
     const skip = (this.currentPage - 1) * this.limit;
 
-    this.productService.getProducts(this.limit, skip).subscribe((response: any) => {
-      this.products = response.products;
-      this.totalPages = Math.ceil(response.total / this.limit);
-      this.cd.detectChanges();
+    this.productService.getProducts(this.limit, skip).subscribe({
+      next: (response: any) => {
+        this.products = response.products || [];
+
+        this.totalPages = Math.ceil(response.total / this.limit);
+        this.cd.detectChanges();
+      },
+      
+      error: (error) => {
+        console.error('Products Load Error:', error);
+    
+      },
+      
     });
   }
+
   searchProducts(searchText: string): void {
-    this.productService.searchProducts(searchText).subscribe((response: any) => {
-      this.products = response.products;
+    this.productService.searchProducts(searchText).subscribe({
+      next: (response: any) => {
+        this.products = response.products || [];
 
-      this.totalPages = 1;
-
-      this.cd.detectChanges();
+        this.totalPages = 1;
+        this.currentPage = 1;
+        this.cd.detectChanges();
+      },
+      error: (error) => {
+        console.error('Search Error:', error);
+      },
     });
   }
 
-  buyNow(product: any) {
+  addToCart(product: any): void {
     this.cartService.addToCart(product);
+
+    console.log('Added To Cart:', product.title);
+
+    
   }
 
-  previousPage() {
+  previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
+
       this.loadProducts();
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     }
   }
 
-  nextPage() {
+  nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+
       this.loadProducts();
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     }
   }
 }

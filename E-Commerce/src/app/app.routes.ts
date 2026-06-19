@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { LoginComponent } from './pages/login/login';
-import { Pagination } from './shared/pagination/pagination';
+import { PaginationComponent } from './shared/pagination/pagination';
 import { Products } from './pages/products/products';
 
 import { CheckoutComponent } from './pages/checkout/checkout';
@@ -14,15 +14,17 @@ import { AIProductSearchComponent } from './features/ai-shopping-assistant/ai-sh
 import { OrderSuccessComponent } from './pages/order-success/order-success';
 import { RegisterComponent } from './pages/register/register';
 import { Wishlist } from './pages/wishlist/wishlist';
+import { HeroBannerComponent } from './pages/banner/banner';
+import { HomeComponent } from './pages/home/home';
 
 export const routes: Routes = [
   {
     path: '',
-    component: Pagination,
+    component: HomeComponent,
   },
   {
     path: 'product',
-    component: Pagination,
+    component: PaginationComponent,
   },
   {
     path: 'login',
@@ -67,5 +69,9 @@ export const routes: Routes = [
   {
     path: 'wishlist',
     component: Wishlist
+  },
+  {
+    path: 'banner',
+    component: HeroBannerComponent
   }
 ];

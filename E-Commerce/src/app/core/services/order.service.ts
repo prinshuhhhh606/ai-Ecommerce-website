@@ -11,11 +11,28 @@ export class OrderService {
 
   constructor(private http: HttpClient) {}
 
-  placeOrder(order: Order): Observable<Order> {
-    return this.http.post<Order>(this.apiUrl, order);
+  // Create Order
+  placeOrder(order: Order): Observable<any> {
+    return this.http.post(this.apiUrl, order);
   }
 
-  getOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(this.apiUrl);
+  // Get All Orders
+  getOrders(): Observable<any> {
+    return this.http.get(this.apiUrl);
+  }
+
+  // Get Single Order
+  getOrderById(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+
+  // Update Status
+  updateOrderStatus(id: string, status: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/status`, { status });
+  }
+
+  // Delete Order
+  deleteOrder(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

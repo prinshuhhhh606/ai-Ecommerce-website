@@ -12,7 +12,9 @@ export interface Order {
   }[];
 
   totalAmount: number;
-  status: string;
+
+  status: 'Pending' | 'Confirmed' | 'Packed' | 'Shipped' | 'Out For Delivery' | 'Delivered';
+
   createdAt?: Date;
   updatedAt?: Date;
 }
