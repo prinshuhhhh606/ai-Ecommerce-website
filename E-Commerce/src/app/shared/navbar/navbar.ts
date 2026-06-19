@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
-
+import { AuthService } from '../../core/services/auth.services';
 import { CartService } from '../../core/services/cart.services';
 import { ProductService } from '../../core/services/product.service';
 
@@ -24,6 +24,7 @@ export class Navbar implements OnInit {
     private router: Router,
     public cartService: CartService,
     private productService: ProductService,
+    private authService: AuthService,
   ) {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.checkLoginStatus();
@@ -39,9 +40,9 @@ export class Navbar implements OnInit {
         return;
       }
 
-     this.productService.searchProducts(value).subscribe((res: any) => {
-       this.filteredProducts = (res.products || []).slice(0, 5);
-     });
+      this.productService.searchProducts(value).subscribe((res: any) => {
+        this.filteredProducts = (res.products || []).slice(0, 5);
+      });
     });
   }
 
@@ -81,6 +82,12 @@ export class Navbar implements OnInit {
   }
 
   wishlist(): void {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login'], {
+        queryParams: { redirect: 'checkout' },
+      });
+      return;
+    }
     this.router.navigate(['/wishlist']);
   }
 

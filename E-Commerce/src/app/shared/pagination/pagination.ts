@@ -107,4 +107,39 @@ export class PaginationComponent implements OnInit {
       });
     }
   }
+
+
+
+    addToWishlist(product: any): void {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    alert('Please login first');
+    this.router.navigate(['/login']);
+    return;
+  }
+
+  const wishlist = JSON.parse(
+    localStorage.getItem('wishlist') || '[]'
+  );
+
+  const exists = wishlist.find(
+    (item: any) => item.id === product.id
+  );
+
+  if (exists) {
+    alert('Already in wishlist');
+    return;
+  }
+
+  wishlist.push(product);
+
+  localStorage.setItem(
+    'wishlist',
+    JSON.stringify(wishlist)
+  );
+
+  alert('Added to wishlist ❤️');
+
+  }
 }
