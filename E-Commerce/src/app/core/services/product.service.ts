@@ -5,13 +5,32 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class ProductService {
+  private apiUrl = 'https://dummyjson.com/products';
+
   constructor(private http: HttpClient) {}
 
-  getProducts(limit: number, skip: number) {
-    return this.http.get(`https://dummyjson.com/products?limit=${limit}&skip=${skip}`);
+  // All Products
+  getProducts(limit: number = 20, skip: number = 0) {
+    return this.http.get(`${this.apiUrl}?limit=${limit}&skip=${skip}`);
   }
 
+  // Single Product
+  getProductById(id: number) {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+
+  // Search Products
   searchProducts(searchText: string) {
-    return this.http.get(`https://dummyjson.com/products/search?q=${searchText}`);
+    return this.http.get(`${this.apiUrl}/search?q=${searchText}`);
+  }
+
+  // Categories
+  getCategories() {
+    return this.http.get(`${this.apiUrl}/categories`);
+  }
+
+  // Products By Category
+  getProductsByCategory(category: string) {
+    return this.http.get(`${this.apiUrl}/category/${category}`);
   }
 }

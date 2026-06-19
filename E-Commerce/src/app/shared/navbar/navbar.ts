@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
-
 import { filter } from 'rxjs/operators';
 
 import { CartService } from '../../core/services/cart.services';
+import { ProductService } from '../../core/services/product.service';
 
 @Component({
   selector: 'app-navbar',
@@ -18,10 +18,12 @@ export class Navbar implements OnInit {
   product = new FormControl('');
 
   isLoggedIn = false;
+  filteredProducts: any[] = [];
 
   constructor(
     private router: Router,
     public cartService: CartService,
+    private productService: ProductService,
   ) {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.checkLoginStatus();
@@ -30,12 +32,21 @@ export class Navbar implements OnInit {
 
   ngOnInit(): void {
     this.checkLoginStatus();
+
+    this.product.valueChanges.subscribe((value: string | null) => {
+      if (!value || !value.trim()) {
+        this.filteredProducts = [];
+        return;
+      }
+
+     this.productService.searchProducts(value).subscribe((res: any) => {
+       this.filteredProducts = (res.products || []).slice(0, 5);
+     });
+    });
   }
 
   private checkLoginStatus(): void {
     this.isLoggedIn = !!localStorage.getItem('token');
-
-    console.log('isLoggedIn =>', this.isLoggedIn);
   }
 
   search(): void {
@@ -46,11 +57,19 @@ export class Navbar implements OnInit {
       return;
     }
 
+    this.filteredProducts = [];
+
     this.router.navigate(['/product'], {
       queryParams: {
         search: searchText,
       },
     });
+  }
+
+  selectProduct(item: any): void {
+    this.product.setValue(item.title);
+    this.filteredProducts = [];
+    this.search();
   }
 
   Login(): void {
@@ -74,7 +93,35 @@ export class Navbar implements OnInit {
     localStorage.removeItem('user');
 
     this.isLoggedIn = false;
-
     this.router.navigate(['/login']);
+  }
+
+  startVoiceSearch(): void {
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert('Voice Search not supported in this browser');
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.start();
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+
+      this.product.setValue(transcript);
+      this.search();
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Voice Error:', event.error);
+    };
   }
 }
