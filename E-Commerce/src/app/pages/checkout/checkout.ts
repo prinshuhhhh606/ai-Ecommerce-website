@@ -46,7 +46,7 @@ export class CheckoutComponent {
 
         totalAmount: this.totalAmount,
 
-        status: 'success',
+        status: 'Pending',
 
         items: this.cartItems.map((item) => ({
           title: item.title,
@@ -71,7 +71,9 @@ export class CheckoutComponent {
           },
 
           error: (err) => {
-            console.error('Order Save Error =>', err);
+            console.log('FULL ERROR =>', err);
+            console.log('STATUS =>', err.status);
+            console.log('BACKEND RESPONSE =>', JSON.stringify(err.error, null, 2));
           },
         });
       },
