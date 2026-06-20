@@ -218,7 +218,7 @@ export class PaginationComponent implements OnInit {
 
         this.fuse = new Fuse(this.allProductsForSearch, {
           keys: ['title', 'category', 'brand'],
-          threshold: 0.6,
+          threshold: 0.3,
           distance: 100,
           ignoreLocation: true,
         });
@@ -254,13 +254,15 @@ export class PaginationComponent implements OnInit {
   }
 
   searchProductsLocal(searchText: string): void {
-
+ this.loading = true;
     if (this.fuse) {
       const results = this.fuse.search(searchText);
       this.products = results.map((result) => result.item);
 
       this.totalPages = 1;
       this.currentPage = 1;
+
+    this.loading = false;
       this.cd.detectChanges();
     }
   }

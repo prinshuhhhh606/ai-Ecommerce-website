@@ -212,7 +212,7 @@ export class Navbar implements OnInit {
             { name: 'brand', weight: 0.1 },
             { name: 'category', weight: 0.1 },
           ],
-          threshold: 0.6,
+          threshold: 0.3,
           distance: 100,
           ignoreLocation: true,
           includeScore: true,
@@ -263,7 +263,7 @@ export class Navbar implements OnInit {
   selectProduct(item: any): void {
     this.product.setValue(item.title);
     this.filteredProducts = [];
-    this.search();
+       this.search();
   }
 
   Login(): void {
