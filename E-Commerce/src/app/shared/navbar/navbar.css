@@ -258,6 +258,86 @@
    LOGIN
 ========================================== */
 
+.login {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 15px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: linear-gradient(
+    135deg,
+    #ef4444 0%,
+    #dc2626 100%
+  );
+
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(239, 68, 68, 0.25);
+
+  transition: all 0.3s ease;
+
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+.login::after {
+  content: "";
+  position: absolute;
+
+  top: 0;
+  left: -100%;
+
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.25),
+    transparent
+  );
+
+  transition: left 0.6s ease;
+}
+
+.login:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 28px rgba(239, 68, 68, 0.4);
+}
+
+.login:hover::after {
+  left: 100%;
+}
+
+.login:active {
+  transform: scale(0.96);
+}
+
+.login:focus {
+  outline: none;
+
+  box-shadow:
+    0 0 0 4px rgba(239, 68, 68, 0.2),
+    0 12px 28px rgba(239, 68, 68, 0.35);
+}
+
+
+
 .user {
   width: 46px;
   height: 46px;
@@ -293,76 +373,81 @@
 ========================================== */
 
 .logout {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
 
-  padding: 10px 18px;
+  padding: 8px 15px;
 
   border: none;
-  border-radius: 12px;
+  border-radius: 999px;
 
   background: linear-gradient(
     135deg,
-    #ef4444,
-    #dc2626
+    #ef4444 0%,
+    #dc2626 100%
   );
 
-  color: #ffffff;
+  color: #fff;
 
   font-size: 14px;
   font-weight: 600;
+  letter-spacing: 0.3px;
 
   cursor: pointer;
 
   box-shadow:
-    0 8px 20px rgba(
-      239,
-      68,
-      68,
-      0.25
-    );
+    0 8px 20px rgba(239, 68, 68, 0.25);
 
-  transition:
-    transform .3s ease,
-    box-shadow .3s ease,
-    filter .3s ease;
+  transition: all 0.3s ease;
+
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+.logout::after {
+  content: "";
+  position: absolute;
+
+  top: 0;
+  left: -100%;
+
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.25),
+    transparent
+  );
+
+  transition: left 0.6s ease;
 }
 
 .logout:hover {
-  transform: translateY(-2px);
-
-  filter: brightness(1.05);
+  transform: translateY(-3px);
 
   box-shadow:
-    0 12px 28px rgba(
-      239,
-      68,
-      68,
-      0.35
-    );
+    0 12px 28px rgba(239, 68, 68, 0.4);
+}
+
+.logout:hover::after {
+  left: 100%;
 }
 
 .logout:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
-.logout::before {
-  content: "🚪";
-  font-size: 16px;
-}
-
-.logout:hover {
-  transform: translateY(-2px);
+.logout:focus {
+  outline: none;
 
   box-shadow:
-    0 12px 25px rgba(
-      239,
-      68,
-      68,
-      .35
-    );
+    0 0 0 4px rgba(239, 68, 68, 0.2),
+    0 12px 28px rgba(239, 68, 68, 0.35);
 }
 
 /* ==========================================

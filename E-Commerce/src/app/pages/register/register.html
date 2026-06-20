@@ -1,40 +1,59 @@
 <div class="register-container">
 
-  <form [formGroup]="registerForm" (ngSubmit)="register()">
+  <div class="register-card">
 
-    <h2>Create Account</h2>
+    <div class="register-header">
+      <div class="logo">
+        <i class="fa-solid fa-bag-shopping"></i>
+      </div>
 
-    <p class="subtitle">
-      Join ShopEase and start shopping
-    </p>
+      <h2>Create Account</h2>
 
-    <input
-      type="text"
-      placeholder="Full Name"
-      formControlName="name"
-    />
+      <p>
+        Join ShopEase and start shopping smarter
+      </p>
+    </div>
 
-    <input
-      type="email"
-      placeholder="Email Address"
-      formControlName="email"
-    />
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
 
-    <input
-      type="password"
-      placeholder="Password"
-      formControlName="password"
-    />
+      <div class="input-group">
+        <label>Full Name</label>
+        <input
+          type="text"
+          placeholder="John Doe"
+          formControlName="name"
+        />
+      </div>
 
-    <button type="submit">
-      Create Account
-    </button>
+      <div class="input-group">
+        <label>Email Address</label>
+        <input
+          type="email"
+          placeholder="john@example.com"
+          formControlName="email"
+        />
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input
+          type="password"
+          placeholder="••••••••"
+          formControlName="password"
+        />
+      </div>
+
+      <button type="submit" class="register-btn">
+        Create Account
+      </button>
+
+    </form>
 
     <div class="login-link">
       Already have an account?
       <a routerLink="/login">Login</a>
     </div>
 
-  </form>
+  </div>
 
 </div>

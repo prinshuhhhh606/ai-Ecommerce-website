@@ -83,19 +83,22 @@
     </div>
 
     <button
-      class="login-btn"
+      class="login"
       *ngIf="!isLoggedIn"
       (click)="Login()"
     >
-      👤 Login
+    
+    <i class="fa-regular fa-user"></i>
+    Login
     </button>
 
     <button
-      class="logout-btn"
+      class="logout"
       *ngIf="isLoggedIn"
       (click)="logout()"
     >
-      🚪 Logout
+     <i class="fa-solid fa-right-from-bracket"></i>
+       Logout
     </button>
 
   </div>

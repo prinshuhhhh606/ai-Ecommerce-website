@@ -1,21 +1,24 @@
 <div class="login-container">
-
   <div class="login-card">
 
     <div class="login-header">
+      <div class="logo-circle">
+        <i class="fa-solid fa-bag-shopping"></i>
+      </div>
+
       <h1>ShopEase</h1>
-      <p>Welcome Back</p>
+      <p>Sign in to continue shopping</p>
     </div>
 
     <form [formGroup]="logControl" (ngSubmit)="Login()">
 
       <div class="input-group">
-        <label>Email</label>
+        <label>Email Address</label>
 
         <input
           type="email"
-          placeholder="Enter your email"
           formControlName="email"
+          placeholder="john@example.com"
         />
       </div>
 
@@ -24,12 +27,12 @@
 
         <input
           type="password"
-          placeholder="Enter your password"
           formControlName="password"
+          placeholder="••••••••"
         />
       </div>
 
-      <button type="submit" class="login-btn" (click)="Login()">
+      <button class="login-btn" type="submit">
         Login
       </button>
 
@@ -38,14 +41,9 @@
     <div class="login-footer">
       <p>
         Don't have an account?
-
-        <a (click)="register()">
-          Register
-        </a>
-
+        <a (click)="register()">Register Now</a>
       </p>
     </div>
 
   </div>
-
 </div>
