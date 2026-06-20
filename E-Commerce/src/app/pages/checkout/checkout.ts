@@ -40,24 +40,28 @@ export class CheckoutComponent {
     this.paymentService.createOrder(this.totalAmount, customer).subscribe({
       next: (response: any) => {
         console.log('PAYMENT RESPONSE =>', response);
+        // 👇 YAHAN ADD KARO
+        console.log('💰 Total Payment:', response.amount);
+        console.log('👨‍💻 Developer Gets:', response.developerAmount);
+        console.log('🏪 Shopkeeper Gets:', response.shopkeeperAmount);
 
-      const orderData = {
-        userId: 'USER_001', // temporary user id
+        const orderData = {
+          userId: 'USER_001', // temporary user id
 
-        totalAmount: this.totalAmount,
+          totalAmount: this.totalAmount,
 
-        status: 'Pending',
+          status: 'Pending',
 
-        items: this.cartItems.map((item) => ({
-          title: item.title,
-          price: item.price,
-          thumbnail: item.thumbnail,
-          category: item.category,
-          quantity: item.quantity || 1,
-        })),
-      };
+          items: this.cartItems.map((item) => ({
+            title: item.title,
+            price: item.price,
+            thumbnail: item.thumbnail,
+            category: item.category,
+            quantity: item.quantity || 1,
+          })),
+        };
 
-      console.log('ORDER DATA =>', orderData);
+        console.log('ORDER DATA =>', orderData);
         this.orderService.placeOrder(orderData as any).subscribe({
           next: (savedOrder: any) => {
             console.log('ORDER SAVED =>', savedOrder);

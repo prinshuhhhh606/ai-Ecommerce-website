@@ -17,6 +17,16 @@ const orderSchema = new mongoose.Schema(
       default: 0,
     },
 
+    platformCommission: {
+      type: Number,
+      default: 0,
+    },
+
+    shopkeeperAmount: {
+      type: Number,
+      default: 0,
+    },
+
     status: {
       type: String,
       enum: [

@@ -200,4 +200,36 @@ res.status(500).json({
 }
 });
 
+router.get("/earnings", async (req, res) => {
+  try {
+    const orders = await Order.find();
+
+    const totalSales = orders.reduce(
+      (sum, order) => sum + (order.totalAmount || 0),
+      0,
+    );
+
+    const totalOrders = orders.length;
+
+    const totalCommission = totalSales * 0.1;
+
+    const totalShopkeeperAmount = totalSales * 0.9;
+
+    res.status(200).json({
+      success: true,
+      totalSales,
+      totalOrders,
+      totalCommission,
+      totalShopkeeperAmount,
+    });
+  } catch (error) {
+    console.log("EARNINGS ERROR =>", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch earnings",
+    });
+  }
+});
+
 export default router;

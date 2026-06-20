@@ -1,0 +1,52 @@
+<div class="dashboard-container">
+
+  <div class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <p>Track sales, revenue and platform earnings</p>
+  </div>
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <div class="icon">💰</div>
+
+      <h3>Total Sales</h3>
+
+      <h2>
+        ₹{{ earnings.totalSales }}
+      </h2>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon">📦</div>
+
+      <h3>Total Orders</h3>
+
+      <h2>
+        {{ earnings.totalOrders }}
+      </h2>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon">🏦</div>
+
+      <h3>Platform Earnings</h3>
+
+      <h2>
+        ₹{{ earnings.totalCommission }}
+      </h2>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon">🛍️</div>
+
+      <h3>Shopkeeper Earnings</h3>
+
+      <h2>
+        ₹{{ earnings.totalShopkeeperAmount }}
+      </h2>
+    </div>
+
+  </div>
+
+</div>

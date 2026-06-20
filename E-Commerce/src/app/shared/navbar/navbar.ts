@@ -234,7 +234,7 @@ export class Navbar implements OnInit {
 
       if (this.fuse) {
         const results = this.fuse.search(value);
-        this.filteredProducts = results.slice(0, 5).map((result) => result.item);
+        this.filteredProducts = results.slice(0, 10).map((result) => result.item);
       }
     });
   }
@@ -263,7 +263,7 @@ export class Navbar implements OnInit {
   selectProduct(item: any): void {
     this.product.setValue(item.title);
     this.filteredProducts = [];
-       this.search();
+    this.search();
   }
 
   Login(): void {
@@ -320,5 +320,9 @@ export class Navbar implements OnInit {
     recognition.onerror = (event: any) => {
       console.error('Voice Error:', event.error);
     };
+  }
+
+  admin(): void {
+    this.router.navigate(['/admin']);
   }
 }

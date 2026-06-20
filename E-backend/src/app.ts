@@ -30,18 +30,20 @@ app.post("/api/orders", async (req, res) => {
 });
 
 // GET ORDERS (DB)
+// GET ORDERS (DB)
 app.get("/api/orders", async (req, res) => {
-  const orders = await Order.find();
-  res.json(orders);
-});
+  try {
+    const orders = await Order.find().sort({
+      createdAt: -1,
+    });
 
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "API Running with MongoDB 🚀",
-  });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({
+      message: "Failed to fetch orders",
+    });
+  }
 });
-
 // PAYMENT (same ok)
 app.post("/create-payment", (req, res) => {
   const { amount, customer } = req.body;
@@ -62,6 +64,36 @@ app.get("/payment/:id", (req, res) => {
     paymentId: req.params.id,
     status: "SUCCESS",
   });
+});
+
+app.get("/api/earnings", async (req, res) => {
+  try {
+    const orders = await Order.find();
+
+    const totalSales = orders.reduce(
+      (sum, order) => sum + (order.totalAmount || 0),
+      0,
+    );
+
+    const totalOrders = orders.length;
+
+    const totalCommission = totalSales * 0.1;
+
+    const totalShopkeeperAmount = totalSales * 0.9;
+
+    res.json({
+      success: true,
+      totalSales,
+      totalOrders,
+      totalCommission,
+      totalShopkeeperAmount,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch earnings",
+    });
+  }
 });
 
 export default app;

@@ -185,6 +185,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.services';
 import Fuse from 'fuse.js'; // 1. Fuse.js import kiya
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-pagination',
@@ -257,7 +258,7 @@ export class PaginationComponent implements OnInit {
  this.loading = true;
     if (this.fuse) {
       const results = this.fuse.search(searchText);
-      this.products = results.map((result) => result.item);
+      this.products = results.slice(0,10).map((result) => result.item);
 
       this.totalPages = 1;
       this.currentPage = 1;
@@ -275,6 +276,17 @@ export class PaginationComponent implements OnInit {
   addToCart(product: any): void {
     this.cartService.addToCart(product);
     console.log('Added To Cart:', product.title);
+
+   Swal.fire({
+     icon: 'success',
+     title: 'Added to Cart',
+     text: `${product.title} added successfully`,
+     toast: true,
+     position: 'top-end',
+     showConfirmButton: false,
+     timer: 2000,
+     timerProgressBar: true,
+   });
   }
 
   previousPage(): void {

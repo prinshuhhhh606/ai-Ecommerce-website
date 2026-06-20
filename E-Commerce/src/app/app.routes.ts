@@ -16,6 +16,7 @@ import { RegisterComponent } from './pages/register/register';
 import { Wishlist } from './pages/wishlist/wishlist';
 import { HeroBannerComponent } from './pages/banner/banner';
 import { HomeComponent } from './pages/home/home';
+import { AdminDashboardComponent } from './pages/admin/admin';
 
 export const routes: Routes = [
   {
@@ -64,14 +65,18 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    component: RegisterComponent
+    component: RegisterComponent,
   },
   {
     path: 'wishlist',
-    component: Wishlist
+    component: Wishlist,
   },
   {
     path: 'banner',
-    component: HeroBannerComponent
-  }
+    component: HeroBannerComponent,
+  },
+  {
+    path: 'admin',
+    component: AdminDashboardComponent,
+  },
 ];
