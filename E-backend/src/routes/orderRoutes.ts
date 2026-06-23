@@ -3,64 +3,7 @@ import Order from "../models/order";
 
 const router = Router();
 
-/* CREATE ORDER */
-router.post("/orders", async (req, res) => {
-  try {
-    const { items, totalAmount } = req.body;
 
-    // 10% Developer Commission
-    const developerAmount = totalAmount * 0.1;
-
-    // 90% Shopkeeper Share
-    const shopkeeperAmount = totalAmount - developerAmount;
-
-    const order = await Order.create({
-      items,
-      totalAmount,
-
-      developerAmount,
-      shopkeeperAmount,
-
-      paymentStatus: "Success", // Razorpay/Stripe ke baad update kar sakte ho
-      settlementStatus: "Pending",
-
-      status: "Pending",
-    });
-
-    res.status(201).json({
-      success: true,
-      order,
-    });
-  } catch (error) {
-    console.log("ORDER ERROR =>", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to create order",
-    });
-  }
-});
-
-/* GET ALL ORDERS */
-router.get("/orders", async (req, res) => {
-  try {
-    const orders = await Order.find().sort({
-      createdAt: -1,
-    });
-
-    res.status(200).json({
-      success: true,
-      orders,
-    });
-  } catch (error) {
-    console.log("GET ORDERS ERROR =>", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch orders",
-    });
-  }
-});
 
 /* GET SINGLE ORDER */
 router.get("/orders/:id", async (req, res) => {
@@ -178,6 +121,65 @@ router.delete("/orders/:id", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to delete order",
+    });
+  }
+});
+
+/* CREATE ORDER */
+router.post("/orders", async (req, res) => {
+  try {
+    const { items, totalAmount } = req.body;
+
+    // 10% Developer Commission
+    const developerAmount = totalAmount * 0.1;
+
+    // 90% Shopkeeper Share
+    const shopkeeperAmount = totalAmount - developerAmount;
+
+    const order = await Order.create({
+      items,
+      totalAmount,
+
+      developerAmount,
+      shopkeeperAmount,
+
+      paymentStatus: "Success", // Razorpay/Stripe ke baad update kar sakte ho
+      settlementStatus: "Pending",
+
+      status: "Pending",
+    });
+
+    res.status(201).json({
+      success: true,
+      order,
+    });
+  } catch (error) {
+    console.log("ORDER ERROR =>", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to create order",
+    });
+  }
+});
+
+/* GET ALL ORDERS */
+router.get("/orders", async (req, res) => {
+  try {
+    const orders = await Order.find().sort({
+      createdAt: -1,
+    });
+
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    console.log("GET ORDERS ERROR =>", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch orders",
     });
   }
 });

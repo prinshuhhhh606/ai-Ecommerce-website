@@ -5,7 +5,7 @@ import Order from "./models/order";
 import connectDB from "./config/db";
 import authRoutes from './routes/authRoutes'
 import paymentRoutes from "./routes/paymentRoutes";
-import orderRoutes from './routes/paymentRoutes'
+import orderRoutes from './routes/orderRoutes'
 
 dotenv.config();
 const app: Application = express();
@@ -16,69 +16,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
-app.use("/api",orderRoutes)
+app.use("/api/orders",orderRoutes)
 app.use("/api/payment", paymentRoutes);
 // CREATE ORDER (DB)
 
-
-app.post("/api/orders", async (req, res) => {
-  try {
-    const order = await Order.create(req.body);
-
-    console.log("ORDER SAVED =>", order);
-
-    res.status(201).json(order);
-  } catch (err) {
-    res.status(500).json({ error: err });
-  }
-});
-
-
-// GET ORDERS (DB)
-// GET ORDERS (DB)
-app.get("/api/orders", async (req, res) => {
-  try {
-    const orders = await Order.find().sort({
-      createdAt: -1,
-    });
-
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({
-      message: "Failed to fetch orders",
-    });
-  }
-});
-app.delete("/api/orders/:id", async (req, res) => {
-  try {
-    console.log("DELETE HIT =>", req.params.id);
-
-    const deletedOrder = await Order.findByIdAndDelete(req.params.id);
-
-    console.log("DELETED ORDER =>", deletedOrder);
-
-    if (!deletedOrder) {
-      return res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Order deleted successfully",
-    });
-  } catch (err) {
-    console.log("DELETE ERROR =>", err);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to delete order",
-    });
-  }
-});
-
-// PAYMENT (same ok)
 
 
 
