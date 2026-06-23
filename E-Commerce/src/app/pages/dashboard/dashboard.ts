@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadDashboard() {
-    this.http.get('https://ai-ecommerce-website-2yam.onrender.com/api/earnings').subscribe({
+    this.http.get('https://ai-ecommerce-website-2yam.onrender.com/api/orders/earnings').subscribe({
       next: (res: any) => {
         console.log('DASHBOARD RESPONSE =>', res);
         this.dashboardData = res;
