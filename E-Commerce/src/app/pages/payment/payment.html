@@ -158,17 +158,18 @@
       </div>
 
       <!-- Order Status -->
-      <div *ngIf="orderId" class="order-info">
-        <p><strong>Order ID:</strong> {{ orderId }}</p>
-        <button
-          type="button"
-          (click)="verifyPaymentStatus()"
-          [disabled]="isLoading"
-          class="btn btn-small"
-        >
-          Verify Payment Status
-        </button>
-      </div>
+     <div *ngIf="paymentId" class="order-info">
+  <p><strong>Payment ID:</strong> {{ paymentId }}</p>
+
+  <button
+    type="button"
+    (click)="verifyPaymentStatus()"
+    [disabled]="isLoading"
+    class="btn btn-small"
+  >
+    Verify Payment Status
+  </button>
+</div>
     </form>
 
     <!-- Processing State -->

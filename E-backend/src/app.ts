@@ -4,6 +4,7 @@ import cors from "cors";
 import Order from "./models/order";
 import connectDB from "./config/db";
 import authRoutes from './routes/authRoutes'
+import paymentRoutes from "../src/routes/paymentRoutes";
 
 dotenv.config();
 const app: Application = express();
@@ -14,6 +15,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
+
+app.use("/api/payment", paymentRoutes);
 // CREATE ORDER (DB)
 
 
@@ -74,26 +77,8 @@ app.delete("/api/orders/:id", async (req, res) => {
 });
 
 // PAYMENT (same ok)
-app.post("/create-payment", (req, res) => {
-  const { amount, customer } = req.body;
 
-  res.json({
-    success: true,
-    paymentId: `PAY_${Date.now()}`,
-    status: "SUCCESS",
-    amount,
-    customer,
-    message: "Payment Successful",
-  });
-});
 
-app.get("/payment/:id", (req, res) => {
-  res.json({
-    success: true,
-    paymentId: req.params.id,
-    status: "SUCCESS",
-  });
-});
 
 app.get("/api/earnings", async (req, res) => {
   try {

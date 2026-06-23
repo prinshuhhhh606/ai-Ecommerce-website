@@ -8,10 +8,6 @@ export interface CustomerData {
   phone: string;
 }
 
-export interface PaymentRequest {
-  amount: number;
-  customer: CustomerData;
-}
 @Injectable({
   providedIn: 'root',
 })
@@ -22,18 +18,19 @@ export class PaymentService {
 
   // CREATE PAYMENT
   createOrder(amount: number, customer?: CustomerData): Observable<any> {
-    return this.http.post(`${this.apiUrl}/create-payment`, {
+    return this.http.post(`${this.apiUrl}/api/payment/create-payment`, {
       amount,
       customer,
     });
   }
 
-  // GET PAYMENT BY ID
+  // GET PAYMENT
   getPayment(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/payment/${id}`);
+    return this.http.get(`${this.apiUrl}/api/payment/payment/${id}`);
   }
 
-  verifyOrder(orderId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/payment/${orderId}`);
+  // VERIFY PAYMENT
+  verifyOrder(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/api/payment/payment/${id}`);
   }
 }

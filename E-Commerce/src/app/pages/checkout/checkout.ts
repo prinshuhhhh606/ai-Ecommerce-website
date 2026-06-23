@@ -37,6 +37,7 @@ export class CheckoutComponent {
       phone: '9876543210',
     };
 
+ console.log('https://ai-ecommerce-website-2yam.onrender.com/api/payment/create-payment');
     this.paymentService.createOrder(this.totalAmount, customer).subscribe({
       next: (response: any) => {
         console.log('PAYMENT RESPONSE =>', response);
@@ -44,7 +45,9 @@ export class CheckoutComponent {
         console.log('💰 Total Payment:', response.amount);
         console.log('👨‍💻 Developer Gets:', response.developerAmount);
         console.log('🏪 Shopkeeper Gets:', response.shopkeeperAmount);
+        console.log('FULL RESPONSE =>', response);
 
+   
         const orderData = {
           userId: 'USER_001', // temporary user id
 

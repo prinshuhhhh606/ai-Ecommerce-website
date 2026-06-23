@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -19,11 +20,19 @@ import { PaymentService } from '../../core/services/paymentServices';
 })
 export class PaymentComponent implements OnInit {
   paymentForm!: FormGroup;
+
   isLoading = false;
+
   paymentStatus: 'idle' | 'processing' | 'success' | 'error' = 'idle';
+
   errorMessage = '';
   successMessage = '';
-  orderId: string = '';
+
+  paymentId = '';
+
+  developerAmount = 0;
+  shopkeeperAmount = 0;
+  totalAmount = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -40,7 +49,10 @@ export class PaymentComponent implements OnInit {
       amount: ['', [Validators.required, Validators.min(1)]],
       customerName: ['', [Validators.required, Validators.minLength(3)]],
       customerEmail: ['', [Validators.required, Validators.email]],
-      customerPhone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      customerPhone: [
+        '',
+        [Validators.required, Validators.pattern(/^\d{10}$/)],
+      ],
     });
   }
 
@@ -56,6 +68,7 @@ export class PaymentComponent implements OnInit {
     this.successMessage = '';
 
     const amount = this.paymentForm.get('amount')?.value;
+
     const customerData = {
       name: this.paymentForm.get('customerName')?.value,
       email: this.paymentForm.get('customerEmail')?.value,
@@ -64,56 +77,67 @@ export class PaymentComponent implements OnInit {
 
     this.paymentService.createOrder(amount, customerData).subscribe({
       next: (response: any) => {
-        console.log('Order created:', response);
+        console.log('PAYMENT RESPONSE =>', response);
 
-        if (response.success && response.data) {
-          this.orderId = response.data.order_id;
-          this.successMessage = `Order created successfully! Order ID: ${this.orderId}`;
+        if (response.success) {
+          this.paymentId = response.paymentId;
+
+          this.totalAmount = response.amount;
+          this.developerAmount = response.developerAmount;
+          this.shopkeeperAmount = response.shopkeeperAmount;
+
+          this.successMessage =
+            'Payment Successful! Payment ID: ' + response.paymentId;
+
           this.paymentStatus = 'success';
 
-          // Handle payment URL from Cashfree
-          if (response.data.payment_link || response.data.cf_payment_url) {
-            const paymentUrl = response.data.payment_link || response.data.cf_payment_url;
-            setTimeout(() => {
-              window.location.href = paymentUrl;
-            }, 2000);
-          }
+          console.log('Total Payment:', response.amount);
+          console.log('Developer Gets:', response.developerAmount);
+          console.log('Shopkeeper Gets:', response.shopkeeperAmount);
         }
+
         this.isLoading = false;
       },
+
       error: (error: any) => {
-        console.error('Payment error:', error);
+        console.error('Payment Error:', error);
+
         this.paymentStatus = 'error';
-        this.errorMessage = error.error?.message || 'Payment failed. Please try again.';
+        this.errorMessage =
+          error.error?.message || 'Payment failed. Please try again.';
+
         this.isLoading = false;
       },
     });
   }
 
   verifyPaymentStatus(): void {
-    if (!this.orderId) {
-      this.errorMessage = 'No order ID found';
+    if (!this.paymentId) {
+      this.errorMessage = 'No Payment ID found';
       return;
     }
 
     this.isLoading = true;
-    this.paymentService.verifyOrder(this.orderId).subscribe({
+
+    this.paymentService.verifyOrder(this.paymentId).subscribe({
       next: (response: any) => {
-        console.log('Verification response:', response);
+        console.log('Verification Response:', response);
+
         this.isLoading = false;
 
-        if (response.success || response.data) {
+        if (response.success) {
           this.successMessage = 'Payment verified successfully!';
           this.paymentStatus = 'success';
-          setTimeout(() => {
-            this.router.navigate(['/orders']);
-          }, 2000);
         }
       },
+
       error: (error: any) => {
-        console.error('Verification error:', error);
+        console.error('Verification Error:', error);
+
         this.paymentStatus = 'error';
-        this.errorMessage = error.error?.message || 'Verification failed';
+        this.errorMessage =
+          error.error?.message || 'Verification failed';
+
         this.isLoading = false;
       },
     });
@@ -121,9 +145,15 @@ export class PaymentComponent implements OnInit {
 
   resetForm(): void {
     this.paymentForm.reset();
+
     this.paymentStatus = 'idle';
     this.errorMessage = '';
     this.successMessage = '';
-    this.orderId = '';
+
+    this.paymentId = '';
+
+    this.totalAmount = 0;
+    this.developerAmount = 0;
+    this.shopkeeperAmount = 0;
   }
 }

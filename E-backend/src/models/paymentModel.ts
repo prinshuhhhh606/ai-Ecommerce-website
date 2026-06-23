@@ -1,72 +1,51 @@
-export enum PaymentStatus {
-  PENDING = "PENDING",
-  SUCCESS = "SUCCESS",
-  FAILED = "FAILED",
-  CANCELLED = "CANCELLED",
-}
+import mongoose from "mongoose";
 
-export enum PaymentMethod {
-  CARD = "CARD",
-  UPI = "UPI",
-  NET_BANKING = "NET_BANKING",
-  COD = "COD",
-}
+const paymentSchema = new mongoose.Schema(
+  {
+    paymentId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
 
-export interface Product {
-  id: number;
-  title: string;
-  price: number;
-  category: string;
-  thumbnail: string;
-}
+    amount: {
+      type: Number,
+      required: true,
+    },
 
-export interface PaymentRequest {
-  productId: number;
-  productName: string;
-  amount: number;
+    paymentMethod: {
+      type: String,
+      enum: ["CARD", "UPI", "NET_BANKING", "COD"],
+      required: true,
+    },
 
-  customerName: string;
-  customerEmail: string;
+    customerName: {
+      type: String,
+      required: true,
+    },
 
-  paymentMethod: PaymentMethod;
-}
+    customerEmail: {
+      type: String,
+      required: true,
+    },
 
-export interface PaymentResponse {
-  success: boolean;
-  paymentId: string;
-  status: PaymentStatus;
-  amount: number;
-  transactionDate: Date;
-  message: string;
-}
+    status: {
+      type: String,
+      enum: ["PENDING", "SUCCESS", "FAILED", "CANCELLED"],
+      default: "SUCCESS",
+    },
 
-export interface Payment {
-  paymentId: string;
-  amount: number;
-  paymentMethod: PaymentMethod;
+    developerAmount: {
+      type: Number,
+      default: 0,
+    },
 
-  customerName: string;
-  customerEmail: string;
+    shopkeeperAmount: {
+      type: Number,
+      default: 0,
+    },
+  },
+  { timestamps: true },
+);
 
-  status: PaymentStatus;
-
-  createdAt: Date;
-}
-
-export interface Transaction {
-  paymentId: string;
-
-  productId: number;
-  productName: string;
-
-  amount: number;
-
-  customerName: string;
-  customerEmail: string;
-
-  paymentMethod: PaymentMethod;
-
-  status: PaymentStatus;
-
-  createdAt: Date;
-}
+export default mongoose.model("Payment", paymentSchema);
