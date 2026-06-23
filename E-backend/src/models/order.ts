@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema(
     },
 
     // Developer/Admin Commission
-    platformCommission: {
+    developerAmount: {
       type: Number,
       default: 0,
     },

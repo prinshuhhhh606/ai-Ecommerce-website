@@ -6,7 +6,6 @@
   </div>
 
   <!-- TOP CARDS -->
-
   <div class="stats-grid">
 
     <div class="stat-card sales">
@@ -36,7 +35,6 @@
   </div>
 
   <!-- PAYMENT SPLIT -->
-
   <div class="payment-section">
 
     <div class="payment-card admin">
@@ -46,9 +44,7 @@
         ₹{{dashboardData.totalCommission || 0}}
       </div>
 
-      <small>
-        Total Platform Commission
-      </small>
+      <small>Total Platform Commission</small>
     </div>
 
     <div class="payment-card shopkeeper">
@@ -58,15 +54,12 @@
         ₹{{dashboardData.totalShopkeeperAmount || 0}}
       </div>
 
-      <small>
-        Total Vendor Revenue
-      </small>
+      <small>Total Vendor Revenue</small>
     </div>
 
   </div>
 
   <!-- RECENT ORDERS -->
-
   <div class="table-container">
 
     <div class="table-header">
@@ -87,29 +80,27 @@
       </thead>
 
       <tbody>
-
-        <tr *ngFor="let order of dashboardData.recentOrders">
+        <tr *ngFor="let order of (dashboardData.recentOrders || [])">
 
           <td>{{order._id}}</td>
 
-          <td>{{order.customerName}}</td>
+          <td>{{order.customerName || 'Guest'}}</td>
 
           <td>₹{{order.totalAmount}}</td>
 
           <td class="commission">
-            ₹{{order.platformCommission}}
+            ₹{{order.platformCommission || 0}}
           </td>
 
           <td class="vendor">
-            ₹{{order.shopkeeperAmount}}
+            ₹{{order.shopkeeperAmount || 0}}
           </td>
 
           <td>
-            {{order.status}}
+            {{order.status || 'Pending'}}
           </td>
 
         </tr>
-
       </tbody>
 
     </table>

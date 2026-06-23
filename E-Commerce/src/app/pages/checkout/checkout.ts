@@ -52,6 +52,8 @@ export class CheckoutComponent {
           userId: 'USER_001', // temporary user id
 
           totalAmount: this.totalAmount,
+          platformCommission: response.developerAmount,
+          shopkeeperAmount: response.shopkeeperAmount,
 
           status: 'Pending',
 

@@ -4,14 +4,14 @@ export const createOrder = async (req: any, res: any) => {
   try {
     const { items, totalAmount } = req.body;
 
-    const platformCommission = totalAmount * 0.1; // 10%
-    const shopkeeperAmount = totalAmount - platformCommission;
+    const developerAmount = totalAmount * 0.1; // 10%
+    const shopkeeperAmount = totalAmount - developerAmount;
 
     const order = await Order.create({
       items,
       totalAmount,
 
-      platformCommission,
+      developerAmount,
       shopkeeperAmount,
 
       paymentStatus: "Success", // testing
@@ -54,7 +54,7 @@ export const getEarnings = async (req: any, res: any) => {
     );
 
     const totalCommission = orders.reduce(
-      (sum, order) => sum + order.platformCommission,
+      (sum, order) => sum + order.developerAmount,
       0,
     );
 

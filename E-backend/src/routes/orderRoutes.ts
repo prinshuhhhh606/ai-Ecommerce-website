@@ -9,16 +9,16 @@ router.post("/orders", async (req, res) => {
     const { items, totalAmount } = req.body;
 
     // 10% Developer Commission
-    const platformCommission = totalAmount * 0.1;
+    const developerAmount = totalAmount * 0.1;
 
     // 90% Shopkeeper Share
-    const shopkeeperAmount = totalAmount - platformCommission;
+    const shopkeeperAmount = totalAmount - developerAmount;
 
     const order = await Order.create({
       items,
       totalAmount,
 
-      platformCommission,
+      developerAmount,
       shopkeeperAmount,
 
       paymentStatus: "Success", // Razorpay/Stripe ke baad update kar sakte ho
@@ -195,7 +195,7 @@ router.get("/earnings", async (req, res) => {
     const totalOrders = orders.length;
 
     const totalCommission = orders.reduce(
-      (sum, order) => sum + (order.platformCommission || 0),
+      (sum, order) => sum + (order.developerAmount || 0),
       0,
     );
 

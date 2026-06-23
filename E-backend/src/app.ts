@@ -5,6 +5,7 @@ import Order from "./models/order";
 import connectDB from "./config/db";
 import authRoutes from './routes/authRoutes'
 import paymentRoutes from "./routes/paymentRoutes";
+import orderRoutes from './routes/paymentRoutes'
 
 dotenv.config();
 const app: Application = express();
@@ -15,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
-
+app.use("/api",orderRoutes)
 app.use("/api/payment", paymentRoutes);
 // CREATE ORDER (DB)
 
@@ -31,6 +32,7 @@ app.post("/api/orders", async (req, res) => {
     res.status(500).json({ error: err });
   }
 });
+
 
 // GET ORDERS (DB)
 // GET ORDERS (DB)
@@ -79,35 +81,5 @@ app.delete("/api/orders/:id", async (req, res) => {
 // PAYMENT (same ok)
 
 
-
-app.get("/api/earnings", async (req, res) => {
-  try {
-    const orders = await Order.find();
-
-    const totalSales = orders.reduce(
-      (sum, order) => sum + (order.totalAmount || 0),
-      0,
-    );
-
-    const totalOrders = orders.length;
-
-    const totalCommission = totalSales * 0.1;
-
-    const totalShopkeeperAmount = totalSales * 0.9;
-
-    res.json({
-      success: true,
-      totalSales,
-      totalOrders,
-      totalCommission,
-      totalShopkeeperAmount,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch earnings",
-    });
-  }
-});
 
 export default app;
