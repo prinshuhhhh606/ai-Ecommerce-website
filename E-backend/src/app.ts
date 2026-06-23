@@ -4,7 +4,7 @@ import cors from "cors";
 import Order from "./models/order";
 import connectDB from "./config/db";
 import authRoutes from './routes/authRoutes'
-import paymentRoutes from "../src/routes/paymentRoutes";
+import paymentRoutes from "./routes/paymentRoutes";
 
 dotenv.config();
 const app: Application = express();
