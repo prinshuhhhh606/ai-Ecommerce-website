@@ -1,0 +1,119 @@
+<div class="dashboard-container">
+
+  <div class="dashboard-header">
+    <h1>📊 Admin Dashboard</h1>
+    <p>Manage your ecommerce platform</p>
+  </div>
+
+  <!-- TOP CARDS -->
+
+  <div class="stats-grid">
+
+    <div class="stat-card sales">
+      <span>💰</span>
+      <h4>Total Sales</h4>
+      <h2>₹{{dashboardData.totalSales || 0}}</h2>
+    </div>
+
+    <div class="stat-card orders">
+      <span>📦</span>
+      <h4>Total Orders</h4>
+      <h2>{{dashboardData.totalOrders || 0}}</h2>
+    </div>
+
+    <div class="stat-card users">
+      <span>👥</span>
+      <h4>Total Users</h4>
+      <h2>{{dashboardData.totalUsers || 0}}</h2>
+    </div>
+
+    <div class="stat-card products">
+      <span>🛍️</span>
+      <h4>Total Products</h4>
+      <h2>{{dashboardData.totalProducts || 0}}</h2>
+    </div>
+
+  </div>
+
+  <!-- PAYMENT SPLIT -->
+
+  <div class="payment-section">
+
+    <div class="payment-card admin">
+      <h3>🏦 Developer Earnings</h3>
+
+      <div class="amount">
+        ₹{{dashboardData.totalCommission || 0}}
+      </div>
+
+      <small>
+        Total Platform Commission
+      </small>
+    </div>
+
+    <div class="payment-card shopkeeper">
+      <h3>🛒 Shopkeeper Earnings</h3>
+
+      <div class="amount">
+        ₹{{dashboardData.totalShopkeeperAmount || 0}}
+      </div>
+
+      <small>
+        Total Vendor Revenue
+      </small>
+    </div>
+
+  </div>
+
+  <!-- RECENT ORDERS -->
+
+  <div class="table-container">
+
+    <div class="table-header">
+      <h2>Recent Orders</h2>
+    </div>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Total</th>
+          <th>Commission</th>
+          <th>Shopkeeper</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let order of dashboardData.recentOrders">
+
+          <td>{{order._id}}</td>
+
+          <td>{{order.customerName}}</td>
+
+          <td>₹{{order.totalAmount}}</td>
+
+          <td class="commission">
+            ₹{{order.platformCommission}}
+          </td>
+
+          <td class="vendor">
+            ₹{{order.shopkeeperAmount}}
+          </td>
+
+          <td>
+            {{order.status}}
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

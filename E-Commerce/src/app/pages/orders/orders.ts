@@ -26,7 +26,7 @@ export class OrdersComponent implements OnInit {
     this.loadOrders();
   }
 
-  loadOrders() {
+  loadOrders(): void {
     this.orderService.getOrders().subscribe({
       next: (res: any) => {
         console.log('ORDERS =>', res);
@@ -37,9 +37,12 @@ export class OrdersComponent implements OnInit {
 
         this.cdr.markForCheck();
       },
+
       error: (err) => {
         console.error('GET ORDERS ERROR =>', err);
+
         this.orders = [];
+
         this.cdr.markForCheck();
       },
     });
@@ -47,5 +50,26 @@ export class OrdersComponent implements OnInit {
 
   isStepActive(currentStatus: string, step: string): boolean {
     return this.trackingSteps.indexOf(currentStatus) >= this.trackingSteps.indexOf(step);
+  }
+  removeFromHistory(orderId: string): void {
+    const confirmed = confirm('Are you sure you want to permanently delete this order?');
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.orderService.deleteOrder(orderId).subscribe({
+      next: () => {
+        this.orders = this.orders.filter((order) => order._id !== orderId);
+
+        this.cdr.markForCheck();
+
+        console.log('Order Deleted =>', orderId);
+      },
+
+      error: (err) => {
+        console.error('DELETE ORDER ERROR =>', err);
+      },
+    });
   }
 }

@@ -44,6 +44,35 @@ app.get("/api/orders", async (req, res) => {
     });
   }
 });
+app.delete("/api/orders/:id", async (req, res) => {
+  try {
+    console.log("DELETE HIT =>", req.params.id);
+
+    const deletedOrder = await Order.findByIdAndDelete(req.params.id);
+
+    console.log("DELETED ORDER =>", deletedOrder);
+
+    if (!deletedOrder) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Order deleted successfully",
+    });
+  } catch (err) {
+    console.log("DELETE ERROR =>", err);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete order",
+    });
+  }
+});
+
 // PAYMENT (same ok)
 app.post("/create-payment", (req, res) => {
   const { amount, customer } = req.body;

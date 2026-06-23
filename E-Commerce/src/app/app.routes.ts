@@ -17,6 +17,7 @@ import { Wishlist } from './pages/wishlist/wishlist';
 import { HeroBannerComponent } from './pages/banner/banner';
 import { HomeComponent } from './pages/home/home';
 import { AdminDashboardComponent } from './pages/admin/admin';
+import { DashboardComponent } from './pages/dashboard/dashboard';
 
 export const routes: Routes = [
   {
@@ -79,4 +80,8 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminDashboardComponent,
   },
+  {
+    path: 'dashboard',
+    component: DashboardComponent
+  }
 ];

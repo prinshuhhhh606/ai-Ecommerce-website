@@ -3,7 +3,6 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 />
 <nav class="navbar">
-
   <!-- Logo -->
   <div class="logo">
     <a routerLink="/">ShopEase</a>
@@ -11,41 +10,27 @@
 
   <!-- Search -->
   <div class="search-box">
-      <button (click)="search()">  <i class="fa-solid fa-search search-icon"></i></button>
-    <input
-      type="text"
-      placeholder="Search products..."
-      [formControl]="product"
-    />
+    <button (click)="search()"><i class="fa-solid fa-search search-icon"></i></button>
+    <input type="text" placeholder="Search products..." [formControl]="product" />
 
-     
-  <button (click)="startVoiceSearch()" class="voice-btn">
-  <i class="fa-solid fa-microphone"></i>
-</button>
+    <button (click)="startVoiceSearch()" class="voice-btn">
+      <i class="fa-solid fa-microphone"></i>
+    </button>
 
-
-
-  <!-- Suggestions -->
-  <div
-    class="suggestions"
-    *ngIf="filteredProducts.length"
-  >
-    <div
-      class="suggestion-item"
-      *ngFor="let item of filteredProducts"
-      (click)="selectProduct(item)"
-    >
-      {{ item.title }}
+    <!-- Suggestions -->
+    <div class="suggestions" *ngIf="filteredProducts.length">
+      <div
+        class="suggestion-item"
+        *ngFor="let item of filteredProducts"
+        (click)="selectProduct(item)"
+      >
+        {{ item.title }}
+      </div>
     </div>
-  </div>
-
-
-
   </div>
 
   <!-- Menu -->
   <ul class="nav-links">
-
     <li><a routerLink="/">Home</a></li>
 
     <li><a routerLink="/product">Products</a></li>
@@ -55,25 +40,24 @@
     <li><a routerLink="/my-orders">Orders</a></li>
 
     <li>
-      <a class="wishlist" (click)="wishlist()">
-        ❤️ Wishlist
-      </a>
+      <a class="wishlist" (click)="wishlist()"> ❤️ Wishlist </a>
     </li>
 
-   <li> 
-    <a class="admin-btn" (click)="admin()">
-  📊 Admin </a>
-   </li>
+    <li class="admin-menu">
+      <a class="admin-btn"> 📊 Admin <i class="fa-solid fa-caret-down"></i> </a>
 
+      <ul class="admin-list">
+        <li><a routerLink="/admin/dashboard"  (click)="ShowDashboard()">Dashboard</a></li>
+        <li><a routerLink="/admin/products">Products</a></li>
+        <li><a routerLink="/admin/orders">Orders</a></li>
+        <li><a routerLink="/admin/users">Users</a></li>
+      </ul>
+    </li>
   </ul>
 
   <!-- Right Side -->
   <div class="nav-icons">
-
-    <div
-      class="cart"
-      (click)="cart()"
-    >
+    <div class="cart" (click)="cart()">
       🛒
 
       <span class="cart-count">
@@ -81,25 +65,14 @@
       </span>
     </div>
 
-    <button
-      class="login"
-      *ngIf="!isLoggedIn"
-      (click)="Login()"
-    >
-    
-    <i class="fa-regular fa-user"></i>
-    Login
+    <button class="login" *ngIf="!isLoggedIn" (click)="Login()">
+      <i class="fa-regular fa-user"></i>
+      Login
     </button>
 
-    <button
-      class="logout"
-      *ngIf="isLoggedIn"
-      (click)="logout()"
-    >
-     <i class="fa-solid fa-right-from-bracket"></i>
-       Logout
+    <button class="logout" *ngIf="isLoggedIn" (click)="logout()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      Logout
     </button>
-
   </div>
-
 </nav>

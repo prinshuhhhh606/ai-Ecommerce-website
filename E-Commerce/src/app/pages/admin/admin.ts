@@ -1,36 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './admin.html',
   styleUrls: ['./admin.css'],
 })
-export class AdminDashboardComponent implements OnInit {
-  earnings: any = {
-    totalSales: 0,
-    totalOrders: 0,
-    totalCommission: 0,
-    totalShopkeeperAmount: 0,
-  };
+export class AdminDashboardComponent {
+  adminMenus = [
+    {
+      title: 'Orders',
+      icon: '📦',
+      route: '/admin/orders',
+    },
+    {
+      title: 'Users',
+      icon: '👥',
+      route: '/admin/users',
+    },
+    {
+      title: 'Categories',
+      icon: '🗂️',
+      route: '/admin/categories',
+    },
+    {
+      title: 'Payments',
+      icon: '💳',
+      route: '/admin/payments',
+    },
+    {
+      title: 'Earnings',
+      icon: '🏦',
+      route: '/admin/earnings',
+    },
+    {
+      title: 'Reports',
+      icon: '📊',
+      route: '/admin/reports',
+    },
+  ];
+  
+  showAdminMenu = false;
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit(): void {
-    this.getDashboardData();
-  }
-
-  getDashboardData(): void {
-    this.http.get('http://localhost:5000/api/orders/earnings').subscribe({
-      next: (res: any) => {
-        this.earnings = res;
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
+  toggleAdminMenu(): void {
+    this.showAdminMenu = !this.showAdminMenu;
   }
 }

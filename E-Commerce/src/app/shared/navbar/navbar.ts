@@ -325,4 +325,8 @@ export class Navbar implements OnInit {
   admin(): void {
     this.router.navigate(['/admin']);
   }
+
+  ShowDashboard(){
+    this.router.navigate(['/dashboard'])
+  }
 }

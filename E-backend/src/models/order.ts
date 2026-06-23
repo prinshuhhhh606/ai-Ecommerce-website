@@ -17,14 +17,30 @@ const orderSchema = new mongoose.Schema(
       default: 0,
     },
 
+    // Developer/Admin Commission
     platformCommission: {
       type: Number,
       default: 0,
     },
 
+    // Shopkeeper Share
     shopkeeperAmount: {
       type: Number,
       default: 0,
+    },
+
+    // Payment Status
+    paymentStatus: {
+      type: String,
+      enum: ["Pending", "Success", "Failed"],
+      default: "Pending",
+    },
+
+    // Settlement Status
+    settlementStatus: {
+      type: String,
+      enum: ["Pending", "Paid"],
+      default: "Pending",
     },
 
     status: {
@@ -38,6 +54,11 @@ const orderSchema = new mongoose.Schema(
         "Delivered",
       ],
       default: "Pending",
+    },
+
+    hiddenByUser: {
+      type: Boolean,
+      default: false,
     },
   },
   {
