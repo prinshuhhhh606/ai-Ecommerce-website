@@ -20,6 +20,7 @@ app.use("/api/orders",orderRoutes)
 app.use("/api/payment", paymentRoutes);
 // CREATE ORDER (DB)
 
+console.log("ORDER ROUTES REGISTERED");
 
 
 
