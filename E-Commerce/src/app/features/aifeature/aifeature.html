@@ -1,0 +1,90 @@
+
+
+<div class="ai-container">
+
+  <div class="ai-header">
+    <h3>AI Assistant</h3>
+    <span class="badge">Beta</span>
+  </div>
+
+  <!-- SEARCH INPUT -->
+  <div class="ai-search-box">
+    <input
+      type="text"
+      [(ngModel)]="query"
+      placeholder="Ask anything... (e.g. best phone under 20000)"
+    />
+  </div>
+
+  <!-- SEARCH BUTTON -->
+  <div class="ai-actions">
+    <button class="btn-primary" (click)="search()">
+      Ask AI
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  <div class="ai-state" *ngIf="loading">
+    <div class="loader"></div>
+    <span>Thinking...</span>
+  </div>
+
+  <!-- AI RESPONSE -->
+  <div class="ai-response" *ngIf="response">
+    <div class="ai-label">Response</div>
+    <p>{{ response }}</p>
+  </div>
+
+
+
+  <!-- PRODUCTS -->
+<div *ngIf="aiData?.products?.length" class="products-section">
+
+  <h2 class="section-title">🛍 Suggested Products</h2>
+
+  <div class="products-grid">
+
+    <div class="product-card" *ngFor="let p of aiData.products">
+
+      <div class="image-box">
+        <img
+          [src]="p.thumbnail || p.images?.[0]"
+          [alt]="p.title"
+        />
+      </div>
+
+      <div class="product-content">
+
+        <h3>{{ p.title }}</h3>
+
+        <p class="category">
+          {{ p.category }}
+        </p>
+
+        <p class="description">
+          {{ p.description }}
+        </p>
+
+        <div class="product-footer">
+
+          <span class="price">
+            ₹{{ p.price }}
+          </span>
+
+          <span class="rating">
+            ⭐ {{ p.rating }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+
+

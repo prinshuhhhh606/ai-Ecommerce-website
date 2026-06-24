@@ -6,6 +6,7 @@ import connectDB from "./config/db";
 import authRoutes from './routes/authRoutes'
 import paymentRoutes from "./routes/paymentRoutes";
 import orderRoutes from './routes/orderRoutes'
+import aiRoutes from "./routes/aiRoutes";
 
 dotenv.config();
 const app: Application = express();
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/orders",orderRoutes)
 app.use("/api/payment", paymentRoutes);
+app.use("/api/ai", aiRoutes);
 // CREATE ORDER (DB)
 
 console.log("ORDER ROUTES REGISTERED");

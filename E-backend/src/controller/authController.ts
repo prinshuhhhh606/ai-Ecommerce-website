@@ -69,3 +69,18 @@ export const login = async (req: any, res: any) => {
     });
   }
 };
+
+  export const getProfile = async (req: any, res: any) => {
+    try {
+      const user = await User.findById(req.user.id).select("-password");
+
+      res.status(200).json({
+        success: true,
+        user,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Server Error",
+      });
+    }
+  };

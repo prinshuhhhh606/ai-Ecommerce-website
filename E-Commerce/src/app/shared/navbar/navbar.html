@@ -11,7 +11,7 @@
   <!-- Search -->
   <div class="search-box">
     <button (click)="search()"><i class="fa-solid fa-search search-icon"></i></button>
-    <input type="text" placeholder="Search products..." [formControl]="product" />
+    <input type="text" placeholder="Search products or ask AI..." [formControl]="product" />
 
     <button (click)="startVoiceSearch()" class="voice-btn">
       <i class="fa-solid fa-microphone"></i>
@@ -56,6 +56,8 @@
         <li><a routerLink="/admin/referrals" (click)="ShowReferral()">Referrals</a></li>
 
         <li><a routerLink="/admin/wallets" (click)="ShowWallet()">Wallets</a></li>
+        <li><a routerLink="/admin/users" (click)="AIsearch()">Ai-Search</a></li>
+        
       </ul>
     </li>
   </ul>

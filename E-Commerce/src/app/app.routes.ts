@@ -10,7 +10,7 @@ import { UserComponent } from './pages/users/users';
 import { OrdersComponent } from './pages/orders/orders';
 import { ProductCardComponent } from './Components/product-card/product-card';
 import { ProductListComponent } from './Components/product-list/product-list';
-import { AIProductSearchComponent } from './features/ai-shopping-assistant/ai-shopping-assistant';
+
 import { OrderSuccessComponent } from './pages/order-success/order-success';
 import { RegisterComponent } from './pages/register/register';
 import { Wishlist } from './pages/wishlist/wishlist';
@@ -21,6 +21,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard';
 import { Coupan } from './pages/coupan/coupan';
 import { WalletComponent } from './pages/wallet/wallet';
 import { ReferralComponent } from './pages/referral/referral';
+import { AiSearchComponent } from './features/aifeature/aifeature';
 
 export const routes: Routes = [
   {
@@ -60,8 +61,8 @@ export const routes: Routes = [
     component: ProductListComponent,
   },
   {
-    path: 'ai-search',
-    component: AIProductSearchComponent,
+    path: 'admin/ai-search',
+    component: AiSearchComponent,
   },
   {
     path: 'order-success',

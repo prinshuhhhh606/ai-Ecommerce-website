@@ -17,7 +17,23 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
 
+  saveToken(token: string) {
+    localStorage.setItem('token', token);
+  }
+
+  getToken() {
+    return localStorage.getItem('token');
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+  }
+
+  getProfile() {
+    return this.http.get(`${this.apiUrl}/me`);
+  }
+
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    return !!this.getToken();
   }
 }

@@ -4,12 +4,14 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
-export class AIRecommendationService {
+export class AiService {
+  private apiUrl = 'https://ai-ecommerce-website-2yam.onrender.com/api/ai';
+
   constructor(private http: HttpClient) {}
 
-  getRecommendations(query: string) {
-    return this.http.get(
-      `https://dummyjson.com/products/search?q=${query}`,
-    );
+  search(query: string) {
+    return this.http.post(`${this.apiUrl}/search`, {
+      query,
+    });
   }
 }

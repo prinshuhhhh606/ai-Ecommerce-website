@@ -244,22 +244,31 @@ export class Navbar implements OnInit {
   }
 
   search(): void {
-    const searchText = this.product.value;
+    const searchText = this.product.value?.trim();
 
-    if (!searchText?.trim()) {
-      alert('Please enter a product name');
+    if (!searchText) {
+      alert('Please enter a search term');
       return;
     }
 
-    this.filteredProducts = [];
+    const aiKeywords = ['best', 'recommend', 'suggest', 'under', 'cheap', 'top'];
 
-    this.router.navigate(['/product'], {
-      queryParams: {
-        search: searchText,
-      },
-    });
+    const isAIQuery = aiKeywords.some((word) => searchText.toLowerCase().includes(word));
+
+    if (isAIQuery) {
+      this.router.navigate(['/ai-search'], {
+        queryParams: {
+          q: searchText,
+        },
+      });
+    } else {
+      this.router.navigate(['/product'], {
+        queryParams: {
+          search: searchText,
+        },
+      });
+    }
   }
-
   selectProduct(item: any): void {
     this.product.setValue(item.title);
     this.filteredProducts = [];
@@ -285,7 +294,7 @@ export class Navbar implements OnInit {
   }
 
   AIsearch(): void {
-    this.router.navigate(['/ai-search']);
+    this.router.navigate(['admin/ai-search']);
   }
 
   logout(): void {
@@ -326,16 +335,16 @@ export class Navbar implements OnInit {
     this.router.navigate(['/admin']);
   }
 
-  ShowDashboard(){
-    this.router.navigate(['/dashboard'])
+  ShowDashboard() {
+    this.router.navigate(['/dashboard']);
   }
-  ShowCoupan(){
-    this.router.navigate(['/coupan'])
+  ShowCoupan() {
+    this.router.navigate(['/coupan']);
   }
-  ShowWallet(){
-       this.router.navigate(['/wallet']);
+  ShowWallet() {
+    this.router.navigate(['/wallet']);
   }
-  ShowReferral(){
-   this.router.navigate(['/referral']);
+  ShowReferral() {
+    this.router.navigate(['/referral']);
   }
 }

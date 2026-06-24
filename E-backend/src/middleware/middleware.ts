@@ -1,0 +1,34 @@
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+
+export const protect = (req: any, res: Response, next: NextFunction) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader?.startsWith("Bearer ")) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    const secret = process.env.JWT_SECRET;
+
+    if (!secret) {
+      throw new Error("JWT_SECRET missing");
+    }
+
+    const decoded = jwt.verify(token, secret);
+
+    req.user = decoded;
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Invalid Token",
+    });
+  }
+};
