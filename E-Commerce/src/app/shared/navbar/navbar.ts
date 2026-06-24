@@ -329,4 +329,13 @@ export class Navbar implements OnInit {
   ShowDashboard(){
     this.router.navigate(['/dashboard'])
   }
+  ShowCoupan(){
+    this.router.navigate(['/coupan'])
+  }
+  ShowWallet(){
+       this.router.navigate(['/wallet']);
+  }
+  ShowReferral(){
+   this.router.navigate(['/referral']);
+  }
 }

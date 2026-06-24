@@ -47,10 +47,15 @@
       <a class="admin-btn"> 📊 Admin <i class="fa-solid fa-caret-down"></i> </a>
 
       <ul class="admin-list">
-        <li><a routerLink="/admin/dashboard"  (click)="ShowDashboard()">Dashboard</a></li>
+        <li><a routerLink="/admin/dashboard" (click)="ShowDashboard()">Dashboard</a></li>
         <li><a routerLink="/admin/products">Products</a></li>
         <li><a routerLink="/admin/orders">Orders</a></li>
         <li><a routerLink="/admin/users">Users</a></li>
+        <li><a routerLink="/admin/coupons" (click)="ShowCoupan()">Coupons</a></li>
+
+        <li><a routerLink="/admin/referrals" (click)="ShowReferral()">Referrals</a></li>
+
+        <li><a routerLink="/admin/wallets" (click)="ShowWallet()">Wallets</a></li>
       </ul>
     </li>
   </ul>

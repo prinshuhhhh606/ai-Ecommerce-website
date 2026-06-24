@@ -1,0 +1,55 @@
+<div class="coupon-container">
+    <div class="header">
+        <h2>Coupon Management</h2>
+        <button class="add-btn">+ Add Coupon</button>
+    </div>
+
+    <div class="toolbar">
+        <input type="text" placeholder="🔍 Search coupon..." class="search-input">
+    </div>
+
+    <div class="table-wrapper">
+        <table class="coupon-table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Discount</th>
+                    <th>Min Order</th>
+                    <th>Expiry</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>WELCOME10</td>
+                    <td>10%</td>
+                    <td>₹500</td>
+                    <td>31 Dec 2026</td>
+                    <td>
+                        <span class="status active">Active</span>
+                    </td>
+                    <td>
+                        <button class="action-btn edit">Edit</button>
+                        <button class="action-btn delete">Delete</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>SAVE20</td>
+                    <td>20%</td>
+                    <td>₹1000</td>
+                    <td>15 Jan 2027</td>
+                    <td>
+                        <span class="status inactive">Inactive</span>
+                    </td>
+                    <td>
+                        <button class="action-btn edit">Edit</button>
+                        <button class="action-btn delete">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

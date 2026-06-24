@@ -18,6 +18,9 @@ import { HeroBannerComponent } from './pages/banner/banner';
 import { HomeComponent } from './pages/home/home';
 import { AdminDashboardComponent } from './pages/admin/admin';
 import { DashboardComponent } from './pages/dashboard/dashboard';
+import { Coupan } from './pages/coupan/coupan';
+import { WalletComponent } from './pages/wallet/wallet';
+import { ReferralComponent } from './pages/referral/referral';
 
 export const routes: Routes = [
   {
@@ -83,5 +86,17 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent
+  },
+  {
+    path: 'coupan',
+    component: Coupan
+  },
+  {
+    path: 'wallet',
+    component: WalletComponent
+  },
+  {
+    path: 'referral',
+    component: ReferralComponent
   }
 ];
