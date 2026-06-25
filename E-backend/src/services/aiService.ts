@@ -5,6 +5,7 @@ export const askAI = async (query: string, products: any[]) => {
     const apiKey = process.env.GEMINI_API_KEY;
 
     console.log("GEMINI KEY =>", apiKey);
+    console.log("KEY PREFIX:", process.env.GEMINI_API_KEY?.substring(0, 6));
 
     if (!apiKey) {
       throw new Error("GEMINI_API_KEY missing in .env");
