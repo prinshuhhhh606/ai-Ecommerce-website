@@ -1,93 +1,73 @@
-<div class="wallet-container">
+<div class="wallet-header">
 
-  <!-- Header -->
-  <div class="header">
-    <h2>Wallet Dashboard</h2>
+  <!-- Left Content -->
+  <div class="wallet-info">
 
-    <button class="credit-btn">
-      + Add Credit
+    <div class="wallet-logo">
+      <img
+        src="https://static.vecteezy.com/system/resources/previews/033/890/772/original/wallet-ecommerce-3d-icon-free-png.png"
+        alt="Wallet Dashboard">
+    </div>
+
+    <div class="wallet-content">
+
+      <span class="wallet-tag">
+        💳 Digital Wallet Management
+      </span>
+
+      <h1>Wallet Dashboard</h1>
+
+      <p>
+        Monitor balances, manage transactions, add credits, and track wallet
+        performance in real time.
+      </p>
+
+      <div class="wallet-stats">
+
+        <div class="stat-item">
+          <span class="label">Transactions</span>
+          <strong>{{ filteredTransactions.length }}</strong>
+        </div>
+
+        <div class="stat-item">
+          <span class="label">Credits</span>
+          <strong>₹{{ walletSummary.credit | number }}</strong>
+        </div>
+
+        <div class="stat-item">
+          <span class="label">Debits</span>
+          <strong>₹{{ walletSummary.debit | number }}</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Right Side -->
+  <div class="wallet-actions">
+
+    <div class="wallet-balance-card">
+
+      <span class="balance-label">
+        Available Balance
+      </span>
+
+      <h2>
+        ₹{{ walletSummary.balance | number }}
+      </h2>
+
+      <small>
+        Updated just now
+      </small>
+
+    </div>
+
+    <button class="credit-btn" (click)="addCredit()">
+      <span>➕</span>
+      Add Credit
     </button>
-  </div>
-
-  <!-- Wallet Cards -->
-  <div class="wallet-cards">
-
-    <div class="card">
-      <h4>Total Balance</h4>
-      <h2>₹50,000</h2>
-    </div>
-
-    <div class="card">
-      <h4>Total Credit</h4>
-      <h2>₹80,000</h2>
-    </div>
-
-    <div class="card">
-      <h4>Total Debit</h4>
-      <h2>₹30,000</h2>
-    </div>
-
-    <div class="card">
-      <h4>This Month</h4>
-      <h2>₹12,500</h2>
-    </div>
-
-  </div>
-
-  <!-- Search -->
-  <div class="search-section">
-    <input
-      type="text"
-      placeholder="Search transactions..."
-      [(ngModel)]="searchText"
-    />
-  </div>
-
-  <!-- Transaction Table -->
-  <div class="table-container">
-
-    <table>
-
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Date</th>
-          <th>Description</th>
-          <th>Type</th>
-          <th>Amount</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        <tr *ngFor="let txn of transactions">
-          <td>{{ txn.id }}</td>
-          <td>{{ txn.date }}</td>
-          <td>{{ txn.description }}</td>
-
-          <td>
-            <span
-              [class.credit]="txn.type === 'Credit'"
-              [class.debit]="txn.type === 'Debit'">
-              {{ txn.type }}
-            </span>
-          </td>
-
-          <td>₹{{ txn.amount }}</td>
-
-          <td>
-            <span
-              [class.success]="txn.status === 'Success'"
-              [class.pending]="txn.status === 'Pending'">
-              {{ txn.status }}
-            </span>
-          </td>
-        </tr>
-
-      </tbody>
-
-    </table>
 
   </div>
 

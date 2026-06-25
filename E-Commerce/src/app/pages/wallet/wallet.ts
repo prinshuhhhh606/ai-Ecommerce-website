@@ -1,58 +1,94 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { WalletService } from '../../core/services/wallet.services';
 
 @Component({
   selector: 'app-wallet',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './wallet.html',
   styleUrls: ['./wallet.css'],
 })
-export class WalletComponent {
-  walletTransactions = [
-    {
-      customer: 'Rahul Sharma',
-      transactionId: 'TXN001245',
-      type: 'Credit',
-      amount: 500,
-      status: 'Completed',
-    },
-  ];
+export class WalletComponent implements OnInit {
   searchText = '';
 
-  transactions = [
-    {
-      id: 1001,
-      date: '20-06-2026',
-      description: 'Wallet Recharge',
-      type: 'Credit',
-      amount: 5000,
-      status: 'Success',
-    },
-    {
-      id: 1002,
-      date: '21-06-2026',
-      description: 'Mobile Recharge',
-      type: 'Debit',
-      amount: 399,
-      status: 'Success',
-    },
-    {
-      id: 1003,
-      date: '22-06-2026',
-      description: 'Electricity Bill',
-      type: 'Debit',
-      amount: 1250,
-      status: 'Pending',
-    },
-    {
-      id: 1004,
-      date: '23-06-2026',
-      description: 'Cashback',
-      type: 'Credit',
-      amount: 200,
-      status: 'Success',
-    },
-  ];
+  // Login user id
+  userId = localStorage.getItem('userId') || '';
+
+  walletSummary = {
+    balance: 0,
+    credit: 0,
+    debit: 0,
+    monthly: 0,
+  };
+
+  transactions: any[] = [];
+
+  constructor(private walletService: WalletService) {}
+
+  ngOnInit(): void {
+    this.loadWallet();
+    this.loadTransactions();
+  }
+
+  loadWallet() {
+    if (!this.userId) return;
+
+    this.walletService.getWallet(this.userId).subscribe({
+      next: (res: any) => {
+        this.walletSummary.balance = res.wallet.balance || 0;
+
+        this.walletSummary.credit = res.wallet.credit || 0;
+
+        this.walletSummary.debit = res.wallet.debit || 0;
+
+        this.walletSummary.monthly = res.wallet.credit || 0;
+      },
+      error: (err:any) => {
+        console.error(err);
+      },
+    });
+  }
+
+  loadTransactions() {
+    if (!this.userId) return;
+
+    this.walletService.getTransactions(this.userId).subscribe({
+      next: (res: any) => {
+        this.transactions = res.transactions || [];
+      },
+      error: (err:any) => {
+        console.error(err);
+      },
+    });
+  }
+
+  get filteredTransactions() {
+    return this.transactions.filter(
+      (txn: any) =>
+        txn.description?.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        txn.id?.toLowerCase().includes(this.searchText.toLowerCase()),
+    );
+  }
+
+  addCredit() {
+    const amount = Number(prompt('Enter amount to add'));
+
+    if (!amount || amount <= 0) {
+      return;
+    }
+
+    this.walletService.addMoney(this.userId, amount).subscribe({
+      next: () => {
+        alert('Money Added Successfully');
+
+        this.loadWallet();
+        this.loadTransactions();
+      },
+      error: (err:any) => {
+        alert(err?.error?.message || 'Something went wrong');
+      },
+    });
+  }
 }

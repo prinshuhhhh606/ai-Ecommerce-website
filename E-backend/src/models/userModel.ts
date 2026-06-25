@@ -1,4 +1,17 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+
+  wallet: {
+    balance: number;
+    credit: number;
+    debit: number;
+  };
+}
 
 const userSchema = new mongoose.Schema(
   {
@@ -22,10 +35,29 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "user",
     },
+
+    wallet: {
+      balance: {
+        type: Number,
+        default: 0,
+      },
+
+      credit: {
+        type: Number,
+        default: 0,
+      },
+
+      debit: {
+        type: Number,
+        default: 0,
+      },
+    },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+  },
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model<IUser>("User", userSchema);
 
 export default User;

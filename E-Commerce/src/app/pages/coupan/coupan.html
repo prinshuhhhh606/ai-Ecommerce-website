@@ -1,55 +1,46 @@
-<div class="coupon-container">
-    <div class="header">
-        <h2>Coupon Management</h2>
-        <button class="add-btn">+ Add Coupon</button>
+<div class="coupon-card">
+
+    <div class="coupon-header">
+        <h3>Apply Coupon</h3>
+        <p>Save more on your order</p>
     </div>
 
-    <div class="toolbar">
-        <input type="text" placeholder="🔍 Search coupon..." class="search-input">
+    <div class="coupon-input-box">
+
+        <input
+            type="text"
+            placeholder="Enter coupon code"
+            [(ngModel)]="couponCode">
+
+        <button
+            class="apply-btn"
+            (click)="applyCoupon()">
+            Apply
+        </button>
+
     </div>
 
-    <div class="table-wrapper">
-        <table class="coupon-table">
-            <thead>
-                <tr>
-                    <th>Code</th>
-                    <th>Discount</th>
-                    <th>Min Order</th>
-                    <th>Expiry</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
+    <div class="available-coupons">
 
-            <tbody>
-                <tr>
-                    <td>WELCOME10</td>
-                    <td>10%</td>
-                    <td>₹500</td>
-                    <td>31 Dec 2026</td>
-                    <td>
-                        <span class="status active">Active</span>
-                    </td>
-                    <td>
-                        <button class="action-btn edit">Edit</button>
-                        <button class="action-btn delete">Delete</button>
-                    </td>
-                </tr>
+        <h4>Available Coupons</h4>
 
-                <tr>
-                    <td>SAVE20</td>
-                    <td>20%</td>
-                    <td>₹1000</td>
-                    <td>15 Jan 2027</td>
-                    <td>
-                        <span class="status inactive">Inactive</span>
-                    </td>
-                    <td>
-                        <button class="action-btn edit">Edit</button>
-                        <button class="action-btn delete">Delete</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div
+            class="coupon-item"
+            *ngFor="let coupon of coupons">
+
+            <div class="coupon-info">
+                <span class="code">{{ coupon.code }}</span>
+                <p>{{ coupon.description }}</p>
+            </div>
+
+            <button
+                class="use-btn"
+                (click)="useCoupon(coupon.code)">
+                Apply
+            </button>
+
+        </div>
+
     </div>
+
 </div>

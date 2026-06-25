@@ -1,362 +1,141 @@
-/* Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-
-:root {
-    --primary: #7c3aed;
-    --secondary: #ec4899;
-    --info: #06b6d4;
-    --success: #22c55e;
-    --danger: #ef4444;
-
-    --text-dark: #1e293b;
-    --text-light: #64748b;
-
-    --white: #ffffff;
-    --border: #e2e8f0;
+.coupon-card {
+  width: 100%;
+  max-width: 450px;
+  margin: 20px auto;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
+  transition: all 0.3s ease;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+.coupon-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.12);
 }
 
-body {
-    font-family: "Poppins", sans-serif;
-    min-height: 100vh;
-    padding: 40px;
-
-    background: linear-gradient(
-        135deg,
-        #7c3aed 0%,
-        #ec4899 50%,
-        #06b6d4 100%
-    );
-
-    background-attachment: fixed;
+/* Header */
+.coupon-header {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-/* ==========================
-   Main Container
-========================== */
-
-.coupon-container {
-    max-width: 1400px;
-    margin: auto;
-
-    background: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(20px);
-
-    border-radius: 24px;
-    padding: 30px;
-
-    border: 1px solid rgba(255,255,255,.3);
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.12),
-        0 5px 15px rgba(0,0,0,.05);
+.coupon-header h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ff512f, #dd2476);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* ==========================
-   Header
-========================== */
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
+.coupon-header p {
+  margin-top: 6px;
+  color: #888;
+  font-size: 13px;
 }
 
-.header h2 {
-    font-size: 32px;
-    font-weight: 800;
-
-    background: linear-gradient(
-        90deg,
-        #7c3aed,
-        #ec4899
-    );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+/* Input box */
+.coupon-input-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
 }
 
-/* ==========================
-   Add Button
-========================== */
-
-.add-btn {
-    border: none;
-    outline: none;
-
-    padding: 14px 26px;
-    border-radius: 14px;
-
-    color: white;
-    font-weight: 600;
-    font-size: 14px;
-
-    cursor: pointer;
-
-    background: linear-gradient(
-        135deg,
-        #7c3aed,
-        #ec4899
-    );
-
-    transition: all .35s ease;
-
-    box-shadow:
-        0 10px 25px rgba(124,58,237,.25);
+.coupon-input-box input {
+  flex: 1;
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  outline: none;
+  transition: 0.3s;
+  font-size: 14px;
+  background: #fafafa;
 }
 
-.add-btn:hover {
-    transform: translateY(-4px);
-
-    box-shadow:
-        0 15px 35px rgba(236,72,153,.35);
+.coupon-input-box input:focus {
+  border-color: #dd2476;
+  box-shadow: 0 0 0 3px rgba(221, 36, 118, 0.15);
+  background: #fff;
 }
 
-/* ==========================
-   Search
-========================== */
-
-.toolbar {
-    margin-bottom: 25px;
+/* Apply button */
+.apply-btn {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  background: linear-gradient(135deg, #ff512f, #dd2476);
+  transition: all 0.3s ease;
 }
 
-.search-input {
-    width: 400px;
-    max-width: 100%;
-
-    padding: 14px 18px;
-
-    border-radius: 14px;
-    border: 2px solid transparent;
-
-    font-size: 14px;
-    color: var(--text-dark);
-
-    background:
-        linear-gradient(#fff, #fff) padding-box,
-        linear-gradient(
-            135deg,
-            #7c3aed,
-            #ec4899
-        ) border-box;
-
-    transition: .3s;
+.apply-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 22px rgba(221, 36, 118, 0.25);
 }
 
-.search-input:focus {
-    outline: none;
-
-    box-shadow:
-        0 0 0 5px rgba(124,58,237,.15);
+/* Available coupons */
+.available-coupons {
+  margin-top: 12px;
 }
 
-/* ==========================
-   Table Wrapper
-========================== */
-
-.table-wrapper {
-    overflow-x: auto;
-    border-radius: 16px;
+.available-coupons h4 {
+  margin-bottom: 14px;
+  font-size: 15px;
+  color: #333;
+  font-weight: 600;
 }
 
-/* ==========================
-   Table
-========================== */
-
-.coupon-table {
-    width: 100%;
-    border-collapse: collapse;
-    overflow: hidden;
+/* Coupon item */
+.coupon-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f9f9f9, #f1f1f1);
+  border: 1px solid #eee;
+  transition: 0.3s ease;
 }
 
-.coupon-table thead th {
-    background: linear-gradient(
-        135deg,
-        #7c3aed,
-        #9333ea
-    );
-
-    color: white;
-    padding: 18px;
-
-    text-align: left;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+.coupon-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-.coupon-table tbody tr {
-    background: white;
-    transition: all .3s ease;
+/* Coupon info */
+.coupon-info .code {
+  font-weight: 700;
+  font-size: 15px;
+  color: #dd2476;
+  letter-spacing: 0.5px;
 }
 
-.coupon-table tbody tr:hover {
-    background: linear-gradient(
-        90deg,
-        rgba(124,58,237,.05),
-        rgba(236,72,153,.05)
-    );
-
-    transform: scale(1.005);
+.coupon-info p {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #666;
 }
 
-.coupon-table td {
-    padding: 18px;
-    border-bottom: 1px solid #edf2f7;
-    color: var(--text-dark);
-    font-size: 14px;
+/* Use button */
+.use-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #36d1dc, #5b86e5);
+  transition: 0.3s ease;
 }
 
-/* ==========================
-   Status Badge
-========================== */
-
-.status {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 8px 14px;
-    border-radius: 50px;
-
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.active {
-    background: linear-gradient(
-        135deg,
-        #22c55e,
-        #16a34a
-    );
-
-    color: white;
-}
-
-.inactive {
-    background: linear-gradient(
-        135deg,
-        #ef4444,
-        #dc2626
-    );
-
-    color: white;
-}
-
-/* ==========================
-   Action Buttons
-========================== */
-
-.action-btn {
-    border: none;
-    cursor: pointer;
-
-    padding: 10px 16px;
-    margin-right: 8px;
-
-    border-radius: 10px;
-
-    font-size: 13px;
-    font-weight: 600;
-
-    transition: .3s ease;
-}
-
-.edit {
-    background: linear-gradient(
-        135deg,
-        #06b6d4,
-        #2563eb
-    );
-
-    color: white;
-}
-
-.edit:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 8px 18px rgba(37,99,235,.3);
-}
-
-.delete {
-    background: linear-gradient(
-        135deg,
-        #f97316,
-        #ef4444
-    );
-
-    color: white;
-}
-
-.delete:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 8px 18px rgba(239,68,68,.3);
-}
-
-/* ==========================
-   Responsive
-========================== */
-
-@media (max-width: 992px) {
-
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .search-input {
-        width: 100%;
-    }
-}
-
-@media (max-width: 768px) {
-
-    body {
-        padding: 15px;
-    }
-
-    .coupon-container {
-        padding: 20px;
-    }
-
-    .header h2 {
-        font-size: 24px;
-    }
-
-    .coupon-table th,
-    .coupon-table td {
-        padding: 14px;
-        font-size: 13px;
-    }
-
-    .action-btn {
-        margin-bottom: 5px;
-    }
-}
-
-@media (max-width: 480px) {
-
-    .header h2 {
-        font-size: 22px;
-    }
-
-    .add-btn {
-        width: 100%;
-    }
-
-    .action-btn {
-        width: 100%;
-        margin-right: 0;
-    }
+.use-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 18px rgba(91, 134, 229, 0.3);
 }

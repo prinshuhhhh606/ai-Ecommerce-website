@@ -18,10 +18,11 @@ import { HeroBannerComponent } from './pages/banner/banner';
 import { HomeComponent } from './pages/home/home';
 import { AdminDashboardComponent } from './pages/admin/admin';
 import { DashboardComponent } from './pages/dashboard/dashboard';
-import { Coupan } from './pages/coupan/coupan';
+
 import { WalletComponent } from './pages/wallet/wallet';
 import { ReferralComponent } from './pages/referral/referral';
 import { AiSearchComponent } from './features/aifeature/aifeature';
+import { CouponComponent } from './pages/coupan/coupan';
 
 export const routes: Routes = [
   {
@@ -90,7 +91,7 @@ export const routes: Routes = [
   },
   {
     path: 'coupan',
-    component: Coupan
+    component: CouponComponent
   },
   {
     path: 'wallet',
