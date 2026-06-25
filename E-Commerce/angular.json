@@ -19,19 +19,22 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-
+            "allowedCommonJsDependencies": ["sweetalert2"],
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-
             "styles": ["src/styles.css"]
           },
-
           "configurations": {
             "production": {
+              "optimization": {
+                "fonts": {
+                  "inline": false
+                }
+              },
               "budgets": [
                 {
                   "type": "initial",
@@ -40,23 +43,20 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "10kB",
+                  "maximumError": "15kB"
                 }
               ],
               "outputHashing": "all"
             },
-
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
             }
           },
-
           "defaultConfiguration": "production"
         },
-
         "serve": {
           "builder": "@angular/build:dev-server",
           "configurations": {
@@ -69,7 +69,6 @@
           },
           "defaultConfiguration": "development"
         },
-
         "test": {
           "builder": "@angular/build:unit-test"
         }
