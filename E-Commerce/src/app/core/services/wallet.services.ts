@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class WalletService {
-  private apiUrl = 'http://localhost:5000/api/wallet';
+  private apiUrl = 'https://ai-ecommerce-website-2yam.onrender.com/api/wallet';
 
   constructor(private http: HttpClient) {}
 
