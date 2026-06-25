@@ -8,6 +8,8 @@ import paymentRoutes from "./routes/paymentRoutes";
 import orderRoutes from './routes/orderRoutes'
 import aiRoutes from "./routes/aiRoutes";
 import walletRoutes from './routes/walletRoutes'
+import couponRoutes from "./routes/coupanRoutes";
+
 
 dotenv.config();
 const app: Application = express();
@@ -22,6 +24,7 @@ app.use("/api/orders",orderRoutes)
 app.use("/api/payment", paymentRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/wallet", walletRoutes);
+app.use("/api/coupons", couponRoutes);
 // CREATE ORDER (DB)
 
 console.log("ORDER ROUTES REGISTERED");

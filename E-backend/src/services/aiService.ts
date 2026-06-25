@@ -4,11 +4,8 @@ export const askAI = async (query: string, products: any[]) => {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
 
-    console.log("GEMINI KEY =>", apiKey);
-    console.log("KEY PREFIX:", process.env.GEMINI_API_KEY?.substring(0, 6));
-
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY missing in .env");
+      throw new Error("GEMINI_API_KEY missing");
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
@@ -17,17 +14,40 @@ export const askAI = async (query: string, products: any[]) => {
       model: "gemini-2.5-flash",
     });
 
+    const cleanProducts = products.map((p) => ({
+      id: p.id,
+      title: p.title,
+      price: p.price,
+      category: p.category,
+      rating: p.rating,
+    }));
+
+    // 👇 YAHAN PROMPT LAGEGA
     const prompt = `
-You are an ecommerce shopping assistant.
+You are a world-class ecommerce AI assistant.
+
+Task:
+- Understand user intent deeply
+- Filter only relevant products
+- Rank top 5 best products
+- Consider price, rating, category relevance
+- Avoid irrelevant items
+- Give short and clear reasons
 
 User Query:
 ${query}
 
-Available Products:
-${JSON.stringify(products, null, 2)}
+Products:
+${JSON.stringify(cleanProducts, null, 2)}
 
-Recommend the best matching products.
-Give reasons for each recommendation.
+Return response in JSON format:
+[
+  {
+    "title": "",
+    "price": "",
+    "reason": ""
+  }
+]
 `;
 
     const result = await model.generateContent(prompt);

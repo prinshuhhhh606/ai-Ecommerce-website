@@ -23,6 +23,7 @@ import { WalletComponent } from './pages/wallet/wallet';
 import { ReferralComponent } from './pages/referral/referral';
 import { AiSearchComponent } from './features/aifeature/aifeature';
 import { CouponComponent } from './pages/coupan/coupan';
+import { AccountCreatedComponent } from './Components/acount-successfull/acount-successfull';
 
 export const routes: Routes = [
   {
@@ -100,5 +101,9 @@ export const routes: Routes = [
   {
     path: 'referral',
     component: ReferralComponent
+  },
+  {
+    path: 'account-created',
+    component: AccountCreatedComponent
   }
 ];

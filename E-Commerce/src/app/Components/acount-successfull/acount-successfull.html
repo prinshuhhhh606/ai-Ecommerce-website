@@ -1,0 +1,62 @@
+<div class="success-container">
+
+  <div class="success-icon">
+    ✓
+  </div>
+
+  <h1>Welcome, Rahul!</h1>
+
+  <p class="subtitle">
+    Your account has been created successfully.
+  </p>
+
+  <div class="referral-card">
+
+    <div class="gift-icon">🎁</div>
+
+    <h3>Your Referral Code is Ready!</h3>
+
+    <p>
+      Share your code with friends and earn exciting rewards.
+    </p>
+
+    <div class="code-box">
+      <span>{{ referralCode }}</span>
+
+      <button (click)="copyCode()">
+        📋
+      </button>
+    </div>
+
+  </div>
+
+  <div class="next-section">
+
+    <h3>What's Next?</h3>
+
+    <div class="step">
+      <span>🛍️</span>
+      <p>Share your code or link with friends.</p>
+    </div>
+
+    <div class="step">
+      <span>🛒</span>
+      <p>They sign up and place their first order.</p>
+    </div>
+
+    <div class="step">
+      <span>🎁</span>
+      <p>You both get rewards!</p>
+    </div>
+
+  </div>
+
+  <button class="explore-btn" (click)="exploreNow()">
+    Explore Now
+  </button>
+
+  <button class="share-btn" (click)="shareReferral()">
+    Share Referral Code
+  </button>
+
+</div>

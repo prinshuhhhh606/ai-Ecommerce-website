@@ -1,56 +1,82 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
-interface Coupon {
-  code: string;
-  description: string;
-  discount?: number;
-}
+import { CommonModule } from '@angular/common';
+import { CouponService } from '../../core/services/coupan.services';
 
 @Component({
   selector: 'app-coupon',
-  imports: [FormsModule,CommonModule],
+  standalone: true,
+  imports: [FormsModule, CommonModule],
   templateUrl: './coupan.html',
   styleUrls: ['./coupan.css'],
 })
-export class CouponComponent {
-  couponCode: string = '';
-
-  coupons: Coupon[] = [
-    { code: 'SAVE10', description: 'Get 10% off on your order', discount: 10 },
-    { code: 'WELCOME20', description: 'Flat 20% discount for new users', discount: 20 },
-    { code: 'FREESHIP', description: 'Free shipping on all orders' },
+export class CouponComponent implements OnInit {
+  couponCode = '';
+  coupons = [
+    {
+      code: 'SAVE10',
+      description: 'Get 10% off on orders above ₹500',
+    },
+    {
+      code: 'FLAT100',
+      description: 'Flat ₹100 off on orders above ₹1000',
+    },
+    {
+      code: 'WELCOME20',
+      description: '20% off for new users',
+    },
+    {
+      code: 'FREESHIP',
+      description: 'Free shipping on all orders',
+    },
   ];
 
-  appliedCoupon: Coupon | null = null;
+  appliedCoupon: any = null;
 
-  applyCoupon(): void {
-    if (!this.couponCode) {
-      alert('Please enter a coupon code');
+  // Demo order amount
+  totalAmount = 1000;
+
+  constructor(private couponService: CouponService) {}
+
+  ngOnInit(): void {
+    this.loadCoupons();
+  }
+
+  loadCoupons() {
+    this.couponService.getCoupons().subscribe({
+      next: (res: any) => {
+        this.coupons = res.coupons || [];
+      },
+      error: (err: any) => {
+        console.error('Load Coupons Error:', err);
+      },
+    });
+  }
+  applyCoupon() {
+    if (!this.couponCode.trim()) {
+      alert('Enter coupon code');
       return;
     }
 
-    const found = this.coupons.find((c) => c.code.toLowerCase() === this.couponCode.toLowerCase());
+    this.couponService.applyCoupon(this.couponCode, this.totalAmount).subscribe({
+      next: (res: any) => {
+        this.appliedCoupon = {
+          code: res.couponCode,
+          discount: res.discount,
+          finalAmount: res.finalAmount,
+        };
 
-    if (found) {
-      this.apply(found);
-    } else {
-      alert('Invalid coupon code');
-    }
+        alert(`Coupon Applied Successfully: ${res.couponCode}`);
+      },
+
+      error: (err: any) => {
+        alert(err?.error?.message || 'Invalid Coupon');
+      },
+    });
   }
 
-  useCoupon(code: string): void {
-    const found = this.coupons.find((c) => c.code === code);
-
-    if (found) {
-      this.apply(found);
-    }
-  }
-
-  private apply(coupon: Coupon): void {
-    this.appliedCoupon = coupon;
-    alert(`Coupon applied: ${coupon.code}`);
-    console.log('Applied coupon:', coupon);
+  useCoupon(code: string) {
+    this.couponCode = code;
+    this.applyCoupon();
   }
 }

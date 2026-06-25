@@ -1,74 +1,65 @@
 <div class="wallet-header">
-
-  <!-- Left Content -->
+  <!-- LEFT SIDE -->
   <div class="wallet-info">
-
     <div class="wallet-logo">
       <img
         src="https://static.vecteezy.com/system/resources/previews/033/890/772/original/wallet-ecommerce-3d-icon-free-png.png"
-        alt="Wallet Dashboard">
+        alt="Wallet Dashboard"
+      />
     </div>
 
     <div class="wallet-content">
-
-      <span class="wallet-tag">
-        💳 Digital Wallet Management
-      </span>
+      <span class="wallet-tag"> 💳 Digital Wallet Management </span>
 
       <h1>Wallet Dashboard</h1>
 
-      <p>
-        Monitor balances, manage transactions, add credits, and track wallet
-        performance in real time.
-      </p>
+      <p>Monitor balances, transactions, credits & spending in real time.</p>
 
       <div class="wallet-stats">
-
         <div class="stat-item">
-          <span class="label">Transactions</span>
+          <span>Transactions</span>
           <strong>{{ filteredTransactions.length }}</strong>
         </div>
 
         <div class="stat-item">
-          <span class="label">Credits</span>
+          <span>Credits</span>
           <strong>₹{{ walletSummary.credit | number }}</strong>
         </div>
 
         <div class="stat-item">
-          <span class="label">Debits</span>
+          <span>Debits</span>
           <strong>₹{{ walletSummary.debit | number }}</strong>
         </div>
-
       </div>
-
     </div>
-
   </div>
 
-  <!-- Right Side -->
+  <!-- RIGHT SIDE -->
   <div class="wallet-actions">
-
-    <div class="wallet-balance-card">
-
-      <span class="balance-label">
-        Available Balance
-      </span>
-
-      <h2>
-        ₹{{ walletSummary.balance | number }}
-      </h2>
-
-      <small>
-        Updated just now
-      </small>
-
+    <div class="balance-card">
+      <span>Available Balance</span>
+      <h2>₹{{ walletSummary.balance | number }}</h2>
+      <small>Live balance</small>
     </div>
 
-    <button class="credit-btn" (click)="addCredit()">
-      <span>➕</span>
-      Add Credit
-    </button>
-
+    <!-- BUTTON (ONLY OPEN POPUP) -->
+    <button class="credit-btn" (click)="openPopup()">➕ Add Credit</button>
   </div>
+</div>
 
+<!-- ================= POPUP ================= -->
+<div class="popup-overlay" *ngIf="showPopup">
+  <div class="popup-box">
+    <h2>💰 Add Money</h2>
+
+    <p>Enter amount to add into wallet</p>
+
+    <input type="number" [(ngModel)]="amount" placeholder="Enter amount" />
+
+    <div class="btn-group">
+      <button class="add" (click)="addCredit()">Add Money</button>
+
+      <button class="cancel" (click)="closePopup()">Cancel</button>
+    </div>
+  </div>
 </div>

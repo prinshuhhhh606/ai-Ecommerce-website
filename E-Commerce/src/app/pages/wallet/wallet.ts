@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WalletService } from '../../core/services/wallet.services';
+import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-wallet',
@@ -25,7 +27,10 @@ export class WalletComponent implements OnInit {
 
   transactions: any[] = [];
 
-  constructor(private walletService: WalletService) {}
+  constructor(
+    private walletService: WalletService,
+    private location: Location,
+  ) {}
 
   ngOnInit(): void {
     this.loadWallet();
@@ -45,7 +50,7 @@ export class WalletComponent implements OnInit {
 
         this.walletSummary.monthly = res.wallet.credit || 0;
       },
-      error: (err:any) => {
+      error: (err: any) => {
         console.error(err);
       },
     });
@@ -58,7 +63,7 @@ export class WalletComponent implements OnInit {
       next: (res: any) => {
         this.transactions = res.transactions || [];
       },
-      error: (err:any) => {
+      error: (err: any) => {
         console.error(err);
       },
     });
@@ -73,22 +78,35 @@ export class WalletComponent implements OnInit {
   }
 
   addCredit() {
-    const amount = Number(prompt('Enter amount to add'));
-
-    if (!amount || amount <= 0) {
+    if (!this.amount || this.amount <= 0) {
+      alert('Enter valid amount');
       return;
     }
 
-    this.walletService.addMoney(this.userId, amount).subscribe({
+    this.walletService.addMoney(this.userId, this.amount).subscribe({
       next: () => {
-        alert('Money Added Successfully');
+        alert('Money Added Successfully 💰');
 
+        this.closePopup();
         this.loadWallet();
         this.loadTransactions();
       },
-      error: (err:any) => {
+      error: (err: any) => {
         alert(err?.error?.message || 'Something went wrong');
       },
     });
+  }
+
+  showPopup = false;
+  amount: number = 0;
+
+  openPopup() {
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.showPopup = false;
+    this.amount = 0;
+     this.location.back();
   }
 }

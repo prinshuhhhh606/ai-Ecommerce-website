@@ -21,21 +21,22 @@ export class RegisterComponent {
     email: new FormControl(''),
     password: new FormControl(''),
   });
-
   register() {
-    this.authService.register(this.registerForm.value).subscribe({
-      next: (res: any) => {
-        console.log('REGISTER SUCCESS =>', res);
+    console.log('FORM DATA =>', this.registerForm.value);
 
-        this.router.navigate(['/login']);
-      },
+    this.authService.register(this.registerForm.value).subscribe({
+     next: (res: any) => {
+  console.log('REGISTER SUCCESS =>', res);
+  this.router.navigate(['/account-created']);
+},
 
       error: (err) => {
-        console.log('REGISTER ERROR =>', err);
-       
-          console.log('REGISTER ERROR =>', err);
-          console.log('BACKEND ERROR =>', err.error);
-        },
+        console.log('FULL ERROR =>', err);
+        console.log('err.error =>', err.error);
+        console.log('inner error =>', err.error?.error);
+        console.log('message =>', err.error?.error?.message);
+        console.log('stack =>', err.error?.error?.stack);
+      },
     });
   }
 }
