@@ -1,3 +1,7 @@
 .env
 node_modules/
 dist/
+
+E-backend/.env
+E-backend/.env.development
+E-backend/.env.production
