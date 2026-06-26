@@ -1,6 +1,6 @@
 .env
 node_modules/
-dist/
+dist/git status
 
 E-backend/.env
 E-backend/.env.development
@@ -9,3 +9,6 @@ E-backend/.env.production
 
 .env
 .env.*git add .gitignore
+.env
+.env.*
+node_modules
