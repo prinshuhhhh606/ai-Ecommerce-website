@@ -5,3 +5,7 @@ dist/
 E-backend/.env
 E-backend/.env.development
 E-backend/.env.production
+
+
+.env
+.env.*git add .gitignore
