@@ -36,14 +36,16 @@
 
   <!-- RIGHT SIDE -->
   <div class="wallet-actions">
-    <div class="balance-card">
+    <div class="wallet-balance-card">
       <span>Available Balance</span>
       <h2>₹{{ walletSummary.balance | number }}</h2>
+      
       <small>Live balance</small>
     </div>
 
     <!-- BUTTON (ONLY OPEN POPUP) -->
     <button class="credit-btn" (click)="openPopup()">➕ Add Credit</button>
+    
   </div>
 </div>
 
@@ -57,7 +59,9 @@
     <input type="number" [(ngModel)]="amount" placeholder="Enter amount" />
 
     <div class="btn-group">
-      <button class="add" (click)="addCredit()">Add Money</button>
+    <button type="button" class="add" (click)="addCredit()">
+  Add Money
+</button>
 
       <button class="cancel" (click)="closePopup()">Cancel</button>
     </div>

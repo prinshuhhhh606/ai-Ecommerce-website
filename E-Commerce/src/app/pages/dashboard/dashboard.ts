@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +22,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadDashboard() {
-    this.http.get('https://ai-ecommerce-website-2yam.onrender.com/api/orders/earnings').subscribe({
+    this.http.get(`${environment.apiUrl}/api/orders/earnings`).subscribe({
       next: (res: any) => {
         console.log('DASHBOARD RESPONSE =>', res);
         this.dashboardData = res;

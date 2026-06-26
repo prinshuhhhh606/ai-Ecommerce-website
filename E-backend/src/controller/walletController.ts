@@ -53,7 +53,22 @@ export const getTransactions = async (req: Request, res: Response) => {
 export const addMoney = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const { amount } = req.body;
+    const { amount, paymentStatus } = req.body;
+
+    // Fake payment verification
+    if (paymentStatus !== "SUCCESS") {
+      return res.status(400).json({
+        success: false,
+        message: "Payment not completed",
+      });
+    }
+
+    if (!amount || Number(amount) <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid amount",
+      });
+    }
 
     const user = await User.findById(userId);
 
@@ -64,32 +79,36 @@ export const addMoney = async (req: Request, res: Response) => {
       });
     }
 
+    // Wallet Update
     user.wallet.balance += Number(amount);
     user.wallet.credit += Number(amount);
 
     await user.save();
 
-   await Transaction.create({
-     userId: user._id,
-     type: "Credit",
-     amount: Number(amount),
-     description: "Wallet Topup",
-     status: "Success",
-   });
+    // Transaction History
+    await Transaction.create({
+      userId: user._id,
+      type: "Credit",
+      amount: Number(amount),
+      description: "Wallet Topup",
+      status: "Success",
+    });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Money Added Successfully",
       wallet: user.wallet,
     });
+
   } catch (error) {
-    res.status(500).json({
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
       message: "Server Error",
     });
   }
 };
-
 // Pay From Wallet
 export const payFromWallet = async (req: Request, res: Response) => {
   try {

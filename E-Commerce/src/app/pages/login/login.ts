@@ -24,11 +24,14 @@ export class LoginComponent {
   Login() {
     this.authService.login(this.logControl.value).subscribe({
       next: (res: any) => {
-        console.log('LOGIN SUCCESS =>', res);
+       
+          console.log('LOGIN RESPONSE =>', res);
+          console.log('USER =>', res.user);
 
         localStorage.setItem('token', res.token);
 
         localStorage.setItem('user', JSON.stringify(res.user));
+         localStorage.setItem('userId', res.user._id);
 
         this.router.navigate(['/']);
       },

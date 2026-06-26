@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'https://ai-ecommerce-website-2yam.onrender.com/api/auth';
+  private apiUrl = `${environment.apiUrl}/api/auth`;
 
   constructor(private http: HttpClient) {}
 

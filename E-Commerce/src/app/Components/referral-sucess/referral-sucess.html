@@ -1,0 +1,52 @@
+<div class="success-container">
+
+  <div class="success-card">
+
+    <div class="success-icon">
+      ✅
+    </div>
+
+    <h1>Referral Shared Successfully! 🎉</h1>
+
+    <p class="subtitle">
+      Thank you for sharing your referral code.
+      You will earn rewards when your friend signs up.
+    </p>
+
+    <div class="referral-box">
+
+      <h3>Your Referral Code</h3>
+
+      <div class="code-row">
+        <span>{{ referralCode }}</span>
+
+        <button (click)="copyCode()">
+          Copy
+        </button>
+      </div>
+
+    </div>
+
+    <div class="benefit-box">
+      🎁 You and your friend will both receive ₹50 bonus after successful signup.
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="explore-btn"
+        (click)="exploreNow()">
+        Explore Now →
+      </button>
+
+      <button
+        class="track-btn"
+        (click)="trackReferrals()">
+        Track Referrals
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

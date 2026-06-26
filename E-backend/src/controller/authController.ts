@@ -1,44 +1,62 @@
 import User from "../models/userModel";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generatetoken";
+import mongoose from "mongoose";
 
 // REGISTER
 export const register = async (req: any, res: any) => {
-  try {
-    const { name, email, password } = req.body;
+try {
+  const { name, email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
+  console.log("Request Body:", req.body);
 
-    if (existingUser) {
-      return res.status(400).json({
-        message: "User already exists",
-      });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
+  if (!name || !email || !password) {
+    return res.status(400).json({
+      success: false,
+      message: "All fields are required",
     });
+  }
 
-    res.status(201).json({
-      success: true,
-      message: "User registered successfully",
-      user,
+  console.log("Checking existing user...");
+
+
+console.log("Mongo Ready State:", mongoose.connection.readyState);
+console.log("Model Name:", User.modelName);
+console.log("Collection:", User.collection.name);
+console.log("Checking existing user...");
+console.log("Mongo Ready State:", mongoose.connection.readyState);
+  const existingUser = await User.findOne({ email });
+
+  console.log("findOne completed");
+
+  if (existingUser) {
+    return res.status(400).json({
+      success: false,
+      message: "User already exists",
     });
-  } catch (error: any) {
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await User.create({
+    name,
+    email,
+    password: hashedPassword,
+  });
+
+  return res.status(201).json({
+    success: true,
+    message: "User registered successfully",
+    user,
+  });
+} catch (error: any) {
   console.error("REGISTER ERROR =>", error);
 
   return res.status(500).json({
     success: false,
-    message: error?.message,
-    name: error?.name,
+    message: error.message,
   });
-
-
-  }
+}
 };
 
 // LOGIN
@@ -46,6 +64,11 @@ export const login = async (req: any, res: any) => {
   try {
     const { email, password } = req.body;
 
+    console.log("Mongo Ready State:", mongoose.connection.readyState);
+console.log("Model Name:", User.modelName);
+console.log("Collection:", User.collection.name);
+    console.log("Checking existing user...");
+    console.log("Mongo Ready State:", mongoose.connection.readyState);
     const user = await User.findOne({ email });
 
     if (!user) {

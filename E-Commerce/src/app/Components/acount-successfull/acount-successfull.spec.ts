@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AccountCreatedComponent} from '../acount-successfull/acount-successfull'
 
-import { AcountSuccessfull } from './acount-successfull';
-
-describe('AcountSuccessfull', () => {
-  let component: AcountSuccessfull;
-  let fixture: ComponentFixture<AcountSuccessfull>;
+describe('AccountSuccessfullComponent', () => {
+  let component: AccountCreatedComponent;
+  let fixture: ComponentFixture<AccountCreatedComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AcountSuccessfull],
+      imports: [AccountCreatedComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AcountSuccessfull);
+    fixture = TestBed.createComponent(AccountCreatedComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {
