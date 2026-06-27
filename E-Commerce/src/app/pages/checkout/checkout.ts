@@ -1,17 +1,15 @@
-import { Component } from '@angular/core';
-import { PaymentService } from '../../core/services/paymentServices';
-import { CartService } from '../../core/services/cart.services';
-import { OrderService } from '../../core/services/order.service';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+
+import { CartService } from '../../core/services/cart.services';
+import { OrderService } from '../../core/services/order.service';
 
 interface Coupon {
   code: string;
-  description: string;
   discount: number;
-  type: 'flat' | 'percent' | 'shipping';
+  finalAmount: number;
 }
 
 @Component({
@@ -21,142 +19,97 @@ interface Coupon {
   templateUrl: './checkout.html',
   styleUrls: ['./checkout.css'],
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnInit {
   totalAmount = 0;
+  discount = 0;
+  payableAmount = 0;
+
   cartItems: any[] = [];
   appliedCoupon: Coupon | null = null;
-  discount = 0;
 
   constructor(
-    private paymentService: PaymentService,
     private cartService: CartService,
     private orderService: OrderService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
-    // Load Cart Items
+    // Load cart items
     this.cartItems = this.cartService.getCartItems();
 
-    // Calculate Total
+    // Calculate total
     this.totalAmount = this.cartItems.reduce((sum, item) => {
       return sum + item.price * (item.quantity || 1);
     }, 0);
 
-    // Load Applied Coupon
-    const savedCoupon = localStorage.getItem('appliedCoupon');
+    // Default values
+    this.discount = 0;
+    this.payableAmount = this.totalAmount;
 
-    if (savedCoupon) {
-      this.appliedCoupon = JSON.parse(savedCoupon);
-    }
+    // Load coupon from localStorage
+   const savedCoupon = localStorage.getItem('appliedCoupon');
 
-    console.log('Cart Items:', this.cartItems);
-    console.log('Total Amount:', this.totalAmount);
-    console.log('Applied Coupon:', this.appliedCoupon);
-    console.log('Payable Amount:', this.payableAmount);
+   if (savedCoupon) {
+     this.appliedCoupon = JSON.parse(savedCoupon) as Coupon;
+
+     this.discount = this.appliedCoupon.discount;
+     this.payableAmount = this.appliedCoupon.finalAmount;
+   } else {
+     this.discount = 0;
+     this.payableAmount = this.totalAmount;
+   }
+
+    console.log('Cart Items =>', this.cartItems);
+    console.log('Total Amount =>', this.totalAmount);
+    console.log('Coupon =>', this.appliedCoupon);
+    console.log('Discount =>', this.discount);
+    console.log('Payable =>', this.payableAmount);
   }
 
   payNow(): void {
-    // Cart Empty Check
     if (this.cartItems.length === 0) {
       alert('Your cart is empty.');
       return;
     }
 
-    // Logged User (Example)
-    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const orderData = {
+      items: this.cartItems.map((item) => ({
+        productId: item._id || item.id,
+        title: item.title,
+        price: item.price,
+        quantity: item.quantity || 1,
+        thumbnail: item.thumbnail,
+        category: item.category,
+      })),
 
-    const customer = {
-      name: currentUser?.name || 'Guest User',
-      email: currentUser?.email || 'guest@gmail.com',
-      phone: currentUser?.phone || '9999999999',
+      totalAmount: this.totalAmount,
+
+      // Backend coupon verify karega
+      code: this.appliedCoupon?.code || null,
     };
 
-    console.log('Customer =>', customer);
-    console.log('Original Amount =>', this.totalAmount);
-    console.log('Discount =>', this.discount);
-    console.log('Final Amount =>', this.payableAmount);
-this.paymentService
-  .createOrder({
-    customer,
-    items: this.cartItems.map((item) => ({
-      productId: item._id || item.id,
-      quantity: item.quantity || 1,
-    })),
-  })
-  .subscribe({
-    next: (response: any) => {
-      console.log('PAYMENT RESPONSE =>', response);
+    console.log('ORDER REQUEST =>', orderData);
 
-      const orderData = {
-        userId: currentUser?._id || currentUser?.id || 'USER_001',
+    this.orderService.placeOrder(orderData).subscribe({
+      next: (response: any) => {
+        console.log('ORDER SUCCESS =>', response);
 
-        originalAmount: this.totalAmount,
+        this.cartService.clearCart();
 
-        discount: this.discount,
+        localStorage.removeItem('appliedCoupon');
 
-        couponCode: this.appliedCoupon?.code || null,
+        this.router.navigate(['/order-success'], {
+          queryParams: {
+            orderId: response.data?._id,
+          },
+        });
+      },
 
-        totalAmount: this.payableAmount,
+      error: (err) => {
+        console.error('ORDER ERROR =>', err);
 
-        paymentId: response.paymentId,
-
-        platformCommission: response.developerAmount,
-
-        shopkeeperAmount: response.shopkeeperAmount,
-
-        status: 'Pending',
-
-        items: this.cartItems.map((item) => ({
-          productId: item._id || item.id,
-          title: item.title,
-          price: item.price,
-          quantity: item.quantity || 1,
-          thumbnail: item.thumbnail,
-          category: item.category,
-        })),
-      };
-
-      this.orderService.placeOrder(orderData).subscribe({
-        next: (savedOrder: any) => {
-          this.cartService.clearCart();
-          localStorage.removeItem('appliedCoupon');
-
-          this.router.navigate(['/order-success'], {
-            queryParams: {
-              orderId: savedOrder._id,
-              paymentId: response.paymentId,
-            },
-          });
-        },
-        error: (err) => {
-          console.error('ORDER SAVE ERROR =>', err);
-        },
-      });
-    },
-    error: (err) => {
-      console.error('PAYMENT ERROR =>', err);
-    },
-  });
-  }
-  get payableAmount(): number {
-    if (!this.appliedCoupon) {
-      this.discount = 0;
-      return this.totalAmount;
-    }
-
-    if (this.appliedCoupon.type === 'flat') {
-      this.discount = this.appliedCoupon.discount;
-    }
-
-    if (this.appliedCoupon.type === 'percent') {
-      this.discount = (this.totalAmount * this.appliedCoupon.discount) / 100;
-    }
-
-    if (this.appliedCoupon.type === 'shipping') {
-      this.discount = 0;
-    }
-
-    return Math.max(0, this.totalAmount - this.discount);
+        alert(err.error?.message || 'Failed to place order');
+      },
+    });
   }
 }

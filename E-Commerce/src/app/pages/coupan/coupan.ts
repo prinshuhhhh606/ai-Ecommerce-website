@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CouponService } from '../../core/services/coupan.services';
 import { Router } from '@angular/router';
+import { CartService } from '../../core/services/cart.services';
 
 @Component({
   selector: 'app-coupon',
@@ -23,15 +24,24 @@ export class CouponComponent implements OnInit {
 
   appliedCoupon: any = null;
 
-  totalAmount = 1000;
+  totalAmount = 0;
 
   constructor(
     private couponService: CouponService,
+    private cartService: CartService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.loadCoupons();
+
+    const cartItems = this.cartService.getCartItems();
+
+    this.totalAmount = cartItems.reduce((sum: number, item: any) => {
+      return sum + item.price * (item.quantity || 1);
+    }, 0);
+
+    console.log('TOTAL =', this.totalAmount);
   }
 
   loadCoupons() {
@@ -45,7 +55,6 @@ export class CouponComponent implements OnInit {
     });
   }
 
-  // ✅ FIXED APPLY COUPON
   applyCoupon() {
     if (!this.couponCode.trim()) {
       alert('Enter coupon code');
@@ -60,19 +69,19 @@ export class CouponComponent implements OnInit {
           finalAmount: res.finalAmount,
         };
 
+        // Save complete response
         localStorage.setItem('appliedCoupon', JSON.stringify(this.appliedCoupon));
 
-        alert(`Coupon Applied Successfully: ${res.couponCode}`);
+        alert(`Coupon Applied Successfully`);
 
         this.router.navigate(['/checkout']);
       },
 
       error: (err: any) => {
-        alert(err?.error?.message || 'Invalid Coupon');
+        alert(err.error?.message || 'Invalid Coupon');
       },
     });
   }
-
   // ✅ FIXED OUTSIDE FUNCTION (was missing closing bracket before)
   useCoupon(code: string) {
     this.couponCode = code;

@@ -89,4 +89,98 @@ export const createOrder = async (req: Request, res: Response) => {
       message: error.message,
     });
   }
+  
+};
+
+// ================= GET ALL ORDERS =================
+export const getOrders = async (req: Request, res: Response) => {
+  try {
+    const orders = await Order.find().sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      data: orders,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ================= GET SINGLE ORDER =================
+export const getOrderById = async (req: Request, res: Response) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: order,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ================= DASHBOARD / EARNINGS =================
+export const getEarnings = async (req: Request, res: Response) => {
+  try {
+    const orders = await Order.find();
+
+    const totalSales = orders.reduce(
+      (sum, order: any) => sum + (order.finalAmount || order.totalAmount),
+      0
+    );
+
+    const totalOrders = orders.length;
+
+    const totalCommission = orders.reduce(
+      (sum, order: any) => sum + (order.developerAmount || 0),
+      0
+    );
+
+    const totalShopkeeperAmount = orders.reduce(
+      (sum, order: any) => sum + (order.shopkeeperAmount || 0),
+      0
+    );
+
+    const successfulPayments = orders.filter(
+      (order: any) => order.paymentStatus === "Success"
+    ).length;
+
+    const pendingSettlements = orders.filter(
+      (order: any) => order.settlementStatus === "Pending"
+    ).length;
+
+    const recentOrders = await Order.find()
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    return res.status(200).json({
+      success: true,
+      totalSales,
+      totalOrders,
+      totalCommission,
+      totalShopkeeperAmount,
+      successfulPayments,
+      pendingSettlements,
+      recentOrders,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };

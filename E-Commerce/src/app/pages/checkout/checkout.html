@@ -2,167 +2,116 @@
 
   <div class="checkout-container">
 
-    <!-- <div class="checkout-header">
+    <!-- Coupon -->
+    <div class="coupon-success" *ngIf="appliedCoupon">
 
-      <span class="checkout-badge">
-        🔒 Secure Checkout
-      </span>
-
-      <h1 class="checkout-title">
-        Complete Your Order
-      </h1>
-
-      <p class="checkout-subtitle">
-        Review your payment details and proceed securely.
-      </p>
-
-    </div>
-
-    <div class="summary-card">
-
-      <div class="summary-row">
-        <span>Subtotal</span>
-        <span>₹{{ totalAmount }}</span>
+      <div class="coupon-icon">
+        🎉
       </div>
 
-      <div class="summary-row">
-        <span>Shipping</span>
-        <span>Free</span>
+      <div class="coupon-content">
+        <h3>Coupon Applied</h3>
+
+        <p>
+          <strong>{{ appliedCoupon.code }}</strong> applied successfully.
+        </p>
       </div>
 
-      <div class="summary-row">
-        <span>Tax</span>
-        <span>Included</span>
-      </div>
-
-      <div class="total-row">
-        <span>Total Amount</span>
-        <span class="total-price">
-          ₹{{ totalAmount }}
+      <div class="coupon-save">
+        Saved
+        <span>
+          ₹{{ discount | number:'1.0-2' }}
         </span>
       </div>
 
-    </div> -->
+    </div>
 
-    <!-- =========================
-     COUPON APPLIED
-========================= -->
+    <!-- Payment -->
+    <div class="payment-card">
 
-<div class="coupon-success" *ngIf="appliedCoupon">
+      <h3 class="payment-title">
+        Payment Method
+      </h3>
 
-  <div class="coupon-icon">
-    🎉
-  </div>
+      <div class="payment-option">
 
-  <div class="coupon-content">
-    <h3>Coupon Applied</h3>
+        <div class="payment-left">
 
-    <p>
-      <strong>{{ appliedCoupon.code }}</strong> applied successfully.
-    </p>
-  </div>
+          <div class="payment-icon">
+            💳
+          </div>
 
-  <div class="coupon-save">
-    Saved
-    <span>
-      ₹{{ discount | number:'1.0-0' }}
-    </span>
-  </div>
+          <div>
+            <h4>Online Payment</h4>
+            <p>UPI • Cards • Net Banking</p>
+          </div>
 
-</div>
+        </div>
 
-<!-- =========================
-     PAYMENT METHOD
-========================= -->
+        <div class="payment-check">
+          ✔
+        </div>
 
-<div class="payment-card">
-
-  <h3 class="payment-title">
-    Payment Method
-  </h3>
-
-  <div class="payment-option">
-
-    <div class="payment-left">
-
-      <div class="payment-icon">
-        💳
-      </div>
-
-      <div>
-        <h4>Online Payment</h4>
-        <p>UPI • Cards • Net Banking</p>
       </div>
 
     </div>
 
-    <div class="payment-check">
-      ✔
+    <!-- Price Summary -->
+    <div class="pay-summary">
+
+      <div class="price-row">
+        <span>Subtotal</span>
+        <strong>
+          ₹{{ totalAmount | number:'1.0-2' }}
+        </strong>
+      </div>
+
+      <div class="price-row">
+        <span>Shipping</span>
+        <strong>FREE</strong>
+      </div>
+
+      <!-- Discount -->
+      <div
+        class="price-row"
+        *ngIf="discount > 0">
+
+        <span>Coupon Discount</span>
+
+        <strong class="green">
+          -₹{{ discount | number:'1.0-2' }}
+        </strong>
+
+      </div>
+
+      <hr>
+
+      <div class="grand-total">
+
+        <div>
+          <h3>Total Payable</h3>
+          <small>Inclusive of all taxes</small>
+        </div>
+
+        <h2>
+          ₹{{ payableAmount | number:'1.0-2' }}
+        </h2>
+
+      </div>
+
     </div>
-
-  </div>
-
-</div>
-
-<!-- =========================
-     FINAL PRICE
-========================= -->
-
-<div class="pay-summary">
-
-  <div class="price-row">
-    <span>Subtotal</span>
-    <strong>₹{{ totalAmount }}</strong>
-  </div>
-
-  <div class="price-row">
-    <span>Shipping</span>
-    <strong>FREE</strong>
-  </div>
-
-  <div
-    class="price-row"
-    *ngIf="discount > 0"
-  >
-    <span>Coupon Discount</span>
-
-    <strong class="green">
-      -₹{{ discount }}
-    </strong>
-  </div>
-
-  <hr>
-
-  <div class="grand-total">
-
-    <div>
-      <h3>Total Payable</h3>
-      <small>Inclusive of all taxes</small>
-    </div>
-
-    <h2>
-      ₹{{ payableAmount }}
-    </h2>
-
-  </div>
-
-</div>
 
     <button
       class="pay-btn"
-      (click)="payNow()"
-    >
+      (click)="payNow()">
       Proceed To Payment →
     </button>
 
     <button
       class="continue-btn"
-      routerLink="/"
-    >
+      routerLink="/">
       Continue Shopping
     </button>
-
-   
 
     <p class="secure-text">
       🔐 100% Secure Payment Protected
