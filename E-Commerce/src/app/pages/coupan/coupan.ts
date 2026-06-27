@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CouponService } from '../../core/services/coupan.services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-coupon',
@@ -12,31 +13,22 @@ import { CouponService } from '../../core/services/coupan.services';
 })
 export class CouponComponent implements OnInit {
   couponCode = '';
-  coupons = [
-    {
-      code: 'SAVE10',
-      description: 'Get 10% off on orders above ₹500',
-    },
-    {
-      code: 'FLAT100',
-      description: 'Flat ₹100 off on orders above ₹1000',
-    },
-    {
-      code: 'WELCOME20',
-      description: '20% off for new users',
-    },
-    {
-      code: 'FREESHIP',
-      description: 'Free shipping on all orders',
-    },
+
+  coupons: any[] = [
+    { code: 'SAVE10', description: 'Get 10% off on orders above ₹500' },
+    { code: 'FLAT100', description: 'Flat ₹100 off on orders above ₹1000' },
+    { code: 'WELCOME20', description: '20% off for new users' },
+    { code: 'FREESHIP', description: 'Free shipping on all orders' },
   ];
 
   appliedCoupon: any = null;
 
-  // Demo order amount
   totalAmount = 1000;
 
-  constructor(private couponService: CouponService) {}
+  constructor(
+    private couponService: CouponService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.loadCoupons();
@@ -52,6 +44,8 @@ export class CouponComponent implements OnInit {
       },
     });
   }
+
+  // ✅ FIXED APPLY COUPON
   applyCoupon() {
     if (!this.couponCode.trim()) {
       alert('Enter coupon code');
@@ -66,7 +60,11 @@ export class CouponComponent implements OnInit {
           finalAmount: res.finalAmount,
         };
 
+        localStorage.setItem('appliedCoupon', JSON.stringify(this.appliedCoupon));
+
         alert(`Coupon Applied Successfully: ${res.couponCode}`);
+
+        this.router.navigate(['/checkout']);
       },
 
       error: (err: any) => {
@@ -75,6 +73,7 @@ export class CouponComponent implements OnInit {
     });
   }
 
+  // ✅ FIXED OUTSIDE FUNCTION (was missing closing bracket before)
   useCoupon(code: string) {
     this.couponCode = code;
     this.applyCoupon();

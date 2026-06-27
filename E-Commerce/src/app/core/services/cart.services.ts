@@ -8,14 +8,13 @@ export class CartService {
   cartItems: any[] = [];
 
   addToCart(product: any) {
- 
-  const exists = this.cartItems.find((item) => item.id === product.id);
+    const exists = this.cartItems.find((item) => item.id === product.id);
 
-  if (!exists) {
-    this.cartItems.push(product);
-  }
+    if (!exists) {
+      this.cartItems.push(product);
+    }
 
-      console.log(this.cartItems);
+    console.log(this.cartItems);
   }
 
   getCartItems() {
@@ -26,5 +25,7 @@ export class CartService {
     this.cartItems.splice(index, 1);
   }
 
-  
+  clearCart() {
+    this.cartItems = [];
+  }
 }

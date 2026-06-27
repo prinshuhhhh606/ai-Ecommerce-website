@@ -19,4 +19,6 @@ describe('CheckoutComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  
 });

@@ -1,17 +1,18 @@
 import { Request, Response } from "express";
 import Coupon from "../models/couponModel";
+import { CouponService } from "../services/couponServices";
 
 // Create Coupon
 export const createCoupon = async (req: Request, res: Response) => {
   try {
     const coupon = await Coupon.create(req.body);
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       coupon,
     });
   } catch (error: any) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -19,84 +20,87 @@ export const createCoupon = async (req: Request, res: Response) => {
 };
 
 // Get All Coupons
-export const getAllCoupons = async (req: Request, res: Response) => {
+export const getAllCoupons = async (_req: Request, res: Response) => {
   try {
-    const coupons = await Coupon.find().sort({
-      createdAt: -1,
-    });
+    const coupons = await Coupon.find().sort({ createdAt: -1 });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       coupons,
     });
   } catch (error: any) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
-// Apply Coupon
+// APPLY COUPON (USING YOUR SERVICE CLASS)
 export const applyCoupon = async (req: Request, res: Response) => {
   try {
     const { code, orderAmount } = req.body;
 
-    const coupon = await Coupon.findOne({
-      code: code.toUpperCase(),
-      isActive: true,
-    });
+    const amount = Number(orderAmount);
 
-    if (!coupon) {
-      return res.status(404).json({
-        success: false,
-        message: "Invalid coupon code",
-      });
-    }
-
-    if (new Date() > coupon.expiryDate) {
+    if (!code || isNaN(amount)) {
       return res.status(400).json({
         success: false,
-        message: "Coupon expired",
+        message: "Invalid input data",
       });
     }
 
-    if (orderAmount < coupon.minOrderAmount) {
-      return res.status(400).json({
-        success: false,
-        message: `Minimum order amount ₹${coupon.minOrderAmount} required`,
-      });
-    }
+    const service = new CouponService();
 
-    let discount = 0;
+    const result = await service.applyCoupon(code, amount);
 
-    if (coupon.discountType === "percentage") {
-      discount = (orderAmount * coupon.discountValue) / 100;
-
-      if (coupon.maxDiscount && discount > coupon.maxDiscount) {
-        discount = coupon.maxDiscount;
-      }
-    } else {
-      discount = coupon.discountValue;
-    }
-
-    const finalAmount = orderAmount - discount;
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      couponCode: coupon.code,
-      discount,
-      finalAmount,
+      ...result,
     });
   } catch (error: any) {
-    res.status(500).json({
+    return res.status(400).json({
       success: false,
       message: error.message,
     });
   }
 };
 
-// Delete Coupon
+// OPTIONAL: APPLY + INCREASE USAGE (RECOMMENDED FOR REAL SYSTEM)
+export const applyAndUseCoupon = async (req: Request, res: Response) => {
+  try {
+    const { code, orderAmount } = req.body;
+
+    const amount = Number(orderAmount);
+
+    if (!code || isNaN(amount)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid input data",
+      });
+    }
+
+    const service = new CouponService();
+
+    const result = await service.applyCoupon(code, amount);
+
+    // increase usage after successful validation
+    await service.increaseCouponUsage(code);
+
+    return res.status(200).json({
+      success: true,
+      ...result,
+      message: "Coupon applied successfully",
+    });
+  } catch (error: any) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// DELETE COUPON
 export const deleteCoupon = async (req: Request, res: Response) => {
   try {
     const coupon = await Coupon.findByIdAndDelete(req.params.id);
@@ -108,12 +112,12 @@ export const deleteCoupon = async (req: Request, res: Response) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Coupon deleted successfully",
     });
   } catch (error: any) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

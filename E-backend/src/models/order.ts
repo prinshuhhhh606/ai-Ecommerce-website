@@ -2,8 +2,40 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
+    // 🔗 Link to Payment
+    paymentId: {
+      type: String,
+      default: null,
+    },
+
+    // 🏷️ Coupon tracking
+    couponCode: {
+      type: String,
+      default: null,
+    },
+
+    // 💰 Discount fields (FIXED HERE)
+    discount: {
+      type: Number,
+      default: 0,
+    },
+
+    finalAmount: {
+      type: Number,
+      required: true,
+    },
+
+    coupon: {
+      type: String,
+      default: null,
+    },
+
     items: [
       {
+        productId: {
+          type: String,
+          required: true,
+        },
         title: String,
         price: Number,
         quantity: Number,
@@ -17,26 +49,22 @@ const orderSchema = new mongoose.Schema(
       default: 0,
     },
 
-    // Developer/Admin Commission
     developerAmount: {
       type: Number,
       default: 0,
     },
 
-    // Shopkeeper Share
     shopkeeperAmount: {
       type: Number,
       default: 0,
     },
 
-    // Payment Status
     paymentStatus: {
       type: String,
       enum: ["Pending", "Success", "Failed"],
       default: "Pending",
     },
 
-    // Settlement Status
     settlementStatus: {
       type: String,
       enum: ["Pending", "Paid"],

@@ -8,9 +8,26 @@ const paymentSchema = new mongoose.Schema(
       unique: true,
     },
 
+    // Before discount
+    originalAmount: {
+      type: Number,
+      default: 0,
+    },
+
+    // After discount
     amount: {
       type: Number,
       required: true,
+    },
+
+    discount: {
+      type: Number,
+      default: 0,
+    },
+
+    couponCode: {
+      type: String,
+      default: null,
     },
 
     paymentMethod: {

@@ -1,93 +1,92 @@
+import { Request, Response } from "express";
 import Order from "../models/order";
+import Product from "../models/productModel";
+import { CouponService } from "../services/couponServices";
 
-export const createOrder = async (req: any, res: any) => {
+export const createOrder = async (req: Request, res: Response) => {
   try {
-    const { items, totalAmount } = req.body;
+    const { items, totalAmount, code } = req.body;
 
-    const developerAmount = totalAmount * 0.1; // 10%
-    const shopkeeperAmount = totalAmount - developerAmount;
+    if (!items || items.length === 0 || !totalAmount) {
+      return res.status(400).json({
+        success: false,
+        message: "Items and totalAmount are required",
+      });
+    }
 
+    let finalAmount = Number(totalAmount);
+    let discount = 0;
+    let appliedCoupon = null;
+
+    // ================= COUPON =================
+    if (code) {
+      const service = new CouponService();
+      const result = await service.applyCoupon(code, finalAmount);
+
+      discount = result.discount;
+      finalAmount = result.finalAmount;
+      appliedCoupon = result.couponCode;
+
+      await service.increaseCouponUsage(code);
+    }
+
+    // ================= STOCK VALIDATION + UPDATE =================
+    for (const item of items) {
+     const product: any = await Product.findById(item.productId);
+
+     console.log("PRODUCT:", product);
+
+     if (!product) {
+       return res.status(404).json({
+         success: false,
+         message: "Product not found",
+       });
+     }
+      if (product.stock < item.quantity) {
+        return res.status(400).json({
+          success: false,
+          message: `Insufficient stock for ${product.name}`,
+        });
+      }
+
+      // reduce stock
+      product.stock -= item.quantity;
+      await product.save();
+    }
+
+    // ================= AMOUNT SPLIT =================
+    const developerAmount = finalAmount * 0.1;
+    const shopkeeperAmount = finalAmount - developerAmount;
+
+    // ================= CREATE ORDER =================
     const order = await Order.create({
       items,
       totalAmount,
+      discount,
+      finalAmount,
+      couponCode: appliedCoupon,
 
       developerAmount,
       shopkeeperAmount,
 
-      paymentStatus: "Success", // testing
+      paymentStatus: "Success", // fake mode
       settlementStatus: "Pending",
+      status: "Confirmed",
 
-      status: "Pending",
+      paymentId: "FAKE_" + Date.now(),
     });
 
-    res.status(201).json(order);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: "Failed to create order",
+    return res.status(201).json({
+      success: true,
+      message: "Order placed & stock updated",
+      data: order,
     });
-  }
-};
+  } catch (error: any) {
+    console.error("ORDER ERROR:", error);
 
-export const getOrders = async (req: any, res: any) => {
-  try {
-    const orders = await Order.find().sort({
-      createdAt: -1,
-    });
-
-    res.status(200).json(orders);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: "Failed to fetch orders",
-    });
-  }
-};
-
-export const getEarnings = async (req: any, res: any) => {
-  try {
-    const orders = await Order.find();
-
-    const totalSales = orders.reduce(
-      (sum, order) => sum + order.totalAmount,
-      0,
-    );
-
-    const totalCommission = orders.reduce(
-      (sum, order) => sum + order.developerAmount,
-      0,
-    );
-
-    const totalShopkeeperAmount = orders.reduce(
-      (sum, order) => sum + order.shopkeeperAmount,
-      0,
-    );
-
-    const totalOrders = orders.length;
-
-    const successfulPayments = orders.filter(
-      (order) => order.paymentStatus === "Success",
-    ).length;
-
-    const pendingSettlements = orders.filter(
-      (order) => order.settlementStatus === "Pending",
-    ).length;
-
-    const recentOrders = await Order.find().sort({ createdAt: -1 }).limit(5);
-
-    res.status(200).json({
-      totalSales,
-      totalOrders,
-      totalCommission,
-      totalShopkeeperAmount,
-      successfulPayments,
-      pendingSettlements,
-      recentOrders,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: "Failed to fetch dashboard data",
+    return res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };

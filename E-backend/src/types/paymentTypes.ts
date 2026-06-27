@@ -12,11 +12,26 @@ export enum PaymentMethod {
   COD = "COD",
 }
 
+export interface PaymentItem {
+  productId: string;
+  quantity: number;
+}
+
+export interface Customer {
+  name: string;
+  email: string;
+  phone?: string;
+}
+
 export interface PaymentRequest {
-  amount: number;
-  customerName: string;
-  customerEmail: string;
+  items: PaymentItem[];
+
+  customer: Customer;
+
   paymentMethod: PaymentMethod;
+
+  // ✅ Coupon support added
+  couponCode?: string;
 }
 
 export interface PaymentResponse {
@@ -26,4 +41,11 @@ export interface PaymentResponse {
   amount: number;
   transactionDate: Date;
   message: string;
+
+  // ✅ extra backend calculation fields
+  originalAmount?: number;
+  discount?: number;
+  couponCode?: string;
+  developerAmount?: number;
+  shopkeeperAmount?: number;
 }

@@ -13,7 +13,7 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
   // Create Order
-  placeOrder(order: Order): Observable<any> {
+  placeOrder(order: any): Observable<any> {
     return this.http.post(this.apiUrl, order);
   }
 

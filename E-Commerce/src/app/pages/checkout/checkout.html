@@ -2,7 +2,7 @@
 
   <div class="checkout-container">
 
-    <div class="checkout-header">
+    <!-- <div class="checkout-header">
 
       <span class="checkout-badge">
         🔒 Secure Checkout
@@ -42,7 +42,111 @@
         </span>
       </div>
 
+    </div> -->
+
+    <!-- =========================
+     COUPON APPLIED
+========================= -->
+
+<div class="coupon-success" *ngIf="appliedCoupon">
+
+  <div class="coupon-icon">
+    🎉
+  </div>
+
+  <div class="coupon-content">
+    <h3>Coupon Applied</h3>
+
+    <p>
+      <strong>{{ appliedCoupon.code }}</strong> applied successfully.
+    </p>
+  </div>
+
+  <div class="coupon-save">
+    Saved
+    <span>
+      ₹{{ discount | number:'1.0-0' }}
+    </span>
+  </div>
+
+</div>
+
+<!-- =========================
+     PAYMENT METHOD
+========================= -->
+
+<div class="payment-card">
+
+  <h3 class="payment-title">
+    Payment Method
+  </h3>
+
+  <div class="payment-option">
+
+    <div class="payment-left">
+
+      <div class="payment-icon">
+        💳
+      </div>
+
+      <div>
+        <h4>Online Payment</h4>
+        <p>UPI • Cards • Net Banking</p>
+      </div>
+
     </div>
+
+    <div class="payment-check">
+      ✔
+    </div>
+
+  </div>
+
+</div>
+
+<!-- =========================
+     FINAL PRICE
+========================= -->
+
+<div class="pay-summary">
+
+  <div class="price-row">
+    <span>Subtotal</span>
+    <strong>₹{{ totalAmount }}</strong>
+  </div>
+
+  <div class="price-row">
+    <span>Shipping</span>
+    <strong>FREE</strong>
+  </div>
+
+  <div
+    class="price-row"
+    *ngIf="discount > 0"
+  >
+    <span>Coupon Discount</span>
+
+    <strong class="green">
+      -₹{{ discount }}
+    </strong>
+  </div>
+
+  <hr>
+
+  <div class="grand-total">
+
+    <div>
+      <h3>Total Payable</h3>
+      <small>Inclusive of all taxes</small>
+    </div>
+
+    <h2>
+      ₹{{ payableAmount }}
+    </h2>
+
+  </div>
+
+</div>
 
     <button
       class="pay-btn"
@@ -58,6 +162,8 @@
       Continue Shopping
     </button>
 
+   
+
     <p class="secure-text">
       🔐 100% Secure Payment Protected
     </p>
@@ -65,3 +171,4 @@
   </div>
 
 </section>
+
