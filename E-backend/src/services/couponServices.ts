@@ -40,6 +40,7 @@ console.log("USAGE:", coupon.usedCount, "/", coupon.usageLimit);
      
     console.log("MIN ORDER:", totalAmount, coupon.minOrderAmount);
     if (totalAmount < coupon.minOrderAmount) {
+
       throw new Error(
         `Minimum order amount should be ₹${coupon.minOrderAmount}`,
       );
@@ -67,6 +68,11 @@ console.log("DISCOUNT VALUE:", coupon.discountValue);
     }
 
     const finalAmount = Math.max(0, totalAmount - discount);
+
+
+console.log("TOTAL AMOUNT =>", totalAmount);
+console.log("DISCOUNT =>", discount);
+console.log("FINAL AMOUNT =>", finalAmount);
 console.log("DISCOUNT TYPE:", coupon.discountType);
 console.log("DISCOUNT VALUE:", coupon.discountValue);
     return {

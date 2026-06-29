@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ interface Coupon {
   styleUrls: ['./checkout.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnInit {
   totalAmount = 0;
   discount = 0;
   payableAmount = 0;
@@ -34,7 +34,7 @@ export class CheckoutComponent {
     private router: Router,
     private cd: ChangeDetectorRef,
   ) {
-    // Data jo Products page ne save kiya tha
+    // Products page se aaya checkout data
     const checkoutData = localStorage.getItem('CHECKOUT_DATA');
 
     if (checkoutData) {
@@ -42,14 +42,25 @@ export class CheckoutComponent {
 
       this.cartItems = res.items || [];
       this.totalAmount = res.totalAmount || 0;
-      this.discount = res.discount || 0;
-      this.payableAmount = res.payableAmount > 0 ? res.payableAmount : this.totalAmount;
+
+      // Default payable amount
+      this.payableAmount = this.totalAmount;
+    }
+  }
+
+  ngOnInit(): void {
+    const couponData = localStorage.getItem('appliedCoupon');
+
+    if (couponData) {
+      const coupon: Coupon = JSON.parse(couponData);
+
+      this.appliedCoupon = coupon;
+      this.discount = coupon.discount;
+      this.payableAmount = coupon.finalAmount;
     }
   }
 
   payNow(): void {
-    console.log('PAY NOW CLICKED');
-
     if (!this.cartItems.length) {
       alert('Cart is empty');
       return;
@@ -64,16 +75,13 @@ export class CheckoutComponent {
         image: item.image,
         category: item.category,
       })),
+
       totalAmount: this.payableAmount,
       code: this.appliedCoupon?.code || null,
     };
 
-    console.log('ORDER DATA =>', orderData);
-
     this.orderService.placeOrder(orderData).subscribe({
       next: (response: any) => {
-        console.log('ORDER SUCCESS =>', response);
-
         this.cartService.clearCart();
 
         localStorage.removeItem('CHECKOUT_DATA');
@@ -88,7 +96,6 @@ export class CheckoutComponent {
         this.cd.markForCheck();
       },
       error: (err) => {
-        console.error('ORDER ERROR =>', err);
         alert(err.error?.message || 'Order Failed');
       },
     });

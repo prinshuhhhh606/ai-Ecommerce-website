@@ -39,6 +39,10 @@ export const getAllCoupons = async (_req: Request, res: Response) => {
 // APPLY COUPON (USING YOUR SERVICE CLASS)
 export const applyCoupon = async (req: Request, res: Response) => {
   try {
+    
+    console.log("BODY =>", req.body);
+    console.log("CODE =>", req.body.code);
+    console.log("ORDER AMOUNT =>", req.body.orderAmount);
     const { code, orderAmount } = req.body;
 
     const amount = Number(orderAmount);
