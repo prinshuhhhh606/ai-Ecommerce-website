@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { CouponService } from '../../core/services/coupan.services';
 import { CartService } from '../../core/services/cart.services';
 import { OrderService } from '../../core/services/order.service';
 
@@ -31,6 +31,7 @@ export class CheckoutComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private orderService: OrderService,
+    private couponService: CouponService,
     private router: Router,
     private cd: ChangeDetectorRef,
   ) {
@@ -45,9 +46,13 @@ export class CheckoutComponent implements OnInit {
 
       // Default payable amount
       this.payableAmount = this.totalAmount;
+
+      console.log('TOTAL =>', this.totalAmount);
+      console.log('DISCOUNT =>', this.discount);
+      console.log('PAYABLE =>', this.payableAmount);
+      console.log('COUPON =>', this.appliedCoupon);
     }
   }
-
   ngOnInit(): void {
     const couponData = localStorage.getItem('appliedCoupon');
 
@@ -55,11 +60,49 @@ export class CheckoutComponent implements OnInit {
       const coupon: Coupon = JSON.parse(couponData);
 
       this.appliedCoupon = coupon;
-      this.discount = coupon.discount;
-      this.payableAmount = coupon.finalAmount;
+
+      this.couponService.applyCoupon(coupon.code, this.totalAmount).subscribe({
+        next: (res: any) => {
+          this.discount = res.discount;
+          this.payableAmount = res.finalAmount;
+
+          localStorage.setItem(
+            'appliedCoupon',
+            JSON.stringify({
+              code: res.couponCode,
+              discount: res.discount,
+              finalAmount: res.finalAmount,
+            }),
+          );
+
+          console.log('TOTAL =>', this.totalAmount);
+          console.log('DISCOUNT =>', this.discount);
+          console.log('PAYABLE =>', this.payableAmount);
+          console.log('COUPON =>', this.appliedCoupon);
+
+          this.cd.detectChanges(); // OnPush ke liye
+        },
+
+        error: (err: any) => {
+          console.error(err);
+
+          localStorage.removeItem('appliedCoupon');
+
+          this.discount = 0;
+          this.payableAmount = this.totalAmount;
+
+          this.cd.detectChanges();
+        },
+      });
+    } else {
+      this.discount = 0;
+      this.payableAmount = this.totalAmount;
+
+      console.log('TOTAL =>', this.totalAmount);
+      console.log('DISCOUNT =>', this.discount);
+      console.log('PAYABLE =>', this.payableAmount);
     }
   }
-
   payNow(): void {
     if (!this.cartItems.length) {
       alert('Cart is empty');
