@@ -1,39 +1,62 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  cartItems: any[] = JSON.parse(localStorage.getItem('cart') || '[]');
+  private cartItems: any[] = JSON.parse(localStorage.getItem('cart') || '[]');
 
-  addToCart(product: any) {
-    const exists = this.cartItems.find((item) => item._id === product._id);
+  private cartSubject = new BehaviorSubject<any[]>(this.cartItems);
+  cart$ = this.cartSubject.asObservable();
 
-    if (!exists) {
-      this.cartItems.push({
-        ...product,
-        quantity: 1,
-      });
+  constructor(private http: HttpClient) {}
 
-      localStorage.setItem('cart', JSON.stringify(this.cartItems));
-    }
-
-    console.log(this.cartItems);
+  addToCart(body: any) {
+    return this.http.post(`${environment.apiUrl}/api/cart/add`, body);
   }
 
+  // ✅ GET CART FROM SERVER
+  getCartFromServer() {
+    const userId = localStorage.getItem('userId');
+
+    return this.http.get(`${environment.apiUrl}/api/cart/${userId}`);
+  }
+  // ✅ SYNC CART (ONLY ONE FUNCTION)
+  syncCartFromResponse(cartItems: any[]) {
+    console.log('SYNC CART ITEMS:', cartItems);
+
+    this.cartItems = cartItems;
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+    this.cartSubject.next([...cartItems]);
+  }
+
+  // ✅ LOCAL GET
   getCartItems() {
-    return this.cartItems;
+    return [...this.cartItems];
   }
 
-  removeItem(index: number) {
-    this.cartItems.splice(index, 1);
+  // ✅ REMOVE ITEM
+  removeItem(productId: string) {
+    const userId = localStorage.getItem('userId');
 
-    localStorage.setItem('cart', JSON.stringify(this.cartItems));
+    return this.http.post(`${environment.apiUrl}/api/cart/remove`, {
+      userId,
+      productId,
+    });
   }
 
+  // ✅ CLEAR CART
   clearCart() {
     this.cartItems = [];
+    this.updateCart();
+  }
 
-    localStorage.removeItem('cart');
+  // ✅ UPDATE STATE
+  private updateCart() {
+    localStorage.setItem('cart', JSON.stringify(this.cartItems));
+    this.cartSubject.next([...this.cartItems]);
   }
 }

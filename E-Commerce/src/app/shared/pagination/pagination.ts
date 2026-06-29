@@ -212,13 +212,12 @@ export class PaginationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
-    this.productService.getProducts(194, 0).subscribe({
-      next: (response: any) => {
-        this.allProductsForSearch = response.products || [];
+    this.productService.getProducts().subscribe({
+      next: (products: any[]) => {
+        this.allProductsForSearch = products;
 
         this.fuse = new Fuse(this.allProductsForSearch, {
-          keys: ['title', 'category', 'brand'],
+          keys: ['title', 'category'],
           threshold: 0.3,
           distance: 100,
           ignoreLocation: true,
@@ -226,6 +225,7 @@ export class PaginationComponent implements OnInit {
 
         this.route.queryParams.subscribe((params) => {
           const searchText = params['search'];
+
           if (searchText) {
             this.searchProductsLocal(searchText);
           } else {
@@ -233,37 +233,43 @@ export class PaginationComponent implements OnInit {
           }
         });
       },
+      error: (err) => {
+        console.error('Products Load Error:', err);
+        this.loading = false;
+      },
     });
   }
-
   loadProducts(): void {
-        this.loading = true;
+    this.loading = true;
 
-    const skip = (this.currentPage - 1) * this.limit;
-    this.productService.getProducts(this.limit, skip).subscribe({
-      next: (response: any) => {
-        this.products = response.products || [];
-        this.totalPages = Math.ceil(response.total / this.limit);
-            this.loading = false;
+    this.productService.getProducts().subscribe({
+      next: (response: any[]) => {
+        const start = (this.currentPage - 1) * this.limit;
+        const end = start + this.limit;
+
+        this.products = response.slice(start, end);
+        this.totalPages = Math.ceil(response.length / this.limit);
+
+        this.loading = false;
         this.cd.detectChanges();
       },
       error: (error) => {
         console.error('Products Load Error:', error);
-            this.loading = false;
+        this.loading = false;
       },
     });
   }
 
   searchProductsLocal(searchText: string): void {
- this.loading = true;
+    this.loading = true;
     if (this.fuse) {
       const results = this.fuse.search(searchText);
-      this.products = results.slice(0,10).map((result) => result.item);
+      this.products = results.slice(0, 10).map((result) => result.item);
 
       this.totalPages = 1;
       this.currentPage = 1;
 
-    this.loading = false;
+      this.loading = false;
       this.cd.detectChanges();
     }
   }
@@ -272,23 +278,47 @@ export class PaginationComponent implements OnInit {
     this.loading = true;
     this.searchProductsLocal(searchText);
   }
-
   addToCart(product: any): void {
-    this.cartService.addToCart(product);
-    console.log('Added To Cart:', product.title);
+    console.log('Button Clicked', product);
 
-   Swal.fire({
-     icon: 'success',
-     title: 'Added to Cart',
-     text: `${product.title} added successfully`,
-     toast: true,
-     position: 'top-end',
-     showConfirmButton: false,
-     timer: 2000,
-     timerProgressBar: true,
-   });
+    const body = {
+      productId: product._id,
+      quantity: 1,
+      userId: localStorage.getItem('userId'),
+    };
+
+    console.log('Sending Body:', body);
+
+    this.cartService.addToCart(body).subscribe({
+      next: () => {
+        // Latest cart server se lao
+        this.cartService.getCartFromServer().subscribe({
+          next: (cart: any) => {
+            // Local cart + navbar update
+            this.cartService.syncCartFromResponse(cart.items);
+
+            console.log('Updated Cart:', cart);
+
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'success',
+              title: 'Added to Cart',
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+            });
+          },
+          error: (err) => {
+            console.error('Get Cart Error:', err);
+          },
+        });
+      },
+      error: (err) => {
+        console.error('Cart Error:', err);
+      },
+    });
   }
-
   previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;

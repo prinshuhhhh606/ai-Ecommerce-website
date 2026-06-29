@@ -16,13 +16,16 @@
           <strong>{{ appliedCoupon.code }}</strong> applied successfully.
         </p>
       </div>
+<div class="coupon-save">
+  Saved
+  <span *ngIf="discount > 0; else notApplied">
+    ₹{{ discount | number:'1.0-2' }}
+  </span>
 
-      <div class="coupon-save">
-        Saved
-        <span>
-          ₹{{ discount | number:'1.0-2' }}
-        </span>
-      </div>
+  <ng-template #notApplied>
+    Not Applied
+  </ng-template>
+</div>
 
     </div>
 

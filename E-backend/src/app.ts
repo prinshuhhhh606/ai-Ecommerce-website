@@ -2,6 +2,7 @@ import express, { Application } from "express";
 
 import cors from "cors";
 import Order from "./models/order";
+import productRoutes from "./routes/productRoutes";
 
 import authRoutes from './routes/authRoutes'
 import paymentRoutes from "./routes/paymentRoutes";
@@ -10,7 +11,7 @@ import aiRoutes from "./routes/aiRoutes";
 import walletRoutes from './routes/walletRoutes'
 import couponRoutes from "./routes/coupanRoutes";
 import mongoose from "mongoose";
-
+import cartRoutes from './routes/cartRoutes'
 
 
 const app: Application = express();
@@ -27,6 +28,8 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/wallet", walletRoutes);
 app.use("/api/coupons", couponRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/products", productRoutes);
 // CREATE ORDER (DB)
 
 console.log("ORDER ROUTES REGISTERED");

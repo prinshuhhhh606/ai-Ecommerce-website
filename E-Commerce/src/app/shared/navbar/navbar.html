@@ -67,9 +67,9 @@
     <div class="cart" (click)="cart()">
       🛒
 
-      <span class="cart-count">
-        {{ cartService.getCartItems().length }}
-      </span>
+     <span class="cart-count">
+  {{ (cartService.cart$ | async)?.length || 0 }}
+</span>
     </div>
 
     <button class="login" *ngIf="!isLoggedIn" (click)="Login()">

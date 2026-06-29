@@ -7,10 +7,10 @@
     *ngFor="let item of cartService.getCartItems(); let i = index"
   >
 
-    <img
-      [src]="item.thumbnail"
-      [alt]="item.title"
-    >
+<img
+  [src]="item.image"
+  [alt]="item.title"
+/>
 
     <h3>{{ item.title }}</h3>
 
@@ -22,7 +22,7 @@
       {{ item.category }}
     </p>
 
-    <button (click)="removeItem(i)">
+    <button (click)="removeItem(item)">
       Remove
     </button>
 

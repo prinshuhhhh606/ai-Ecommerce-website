@@ -206,7 +206,7 @@ export class Navbar implements OnInit {
       next: (res: any) => {
         this.allProducts = res.products || res || [];
 
-        const options = {
+        this.fuse = new Fuse(this.allProducts, {
           keys: [
             { name: 'title', weight: 0.8 },
             { name: 'brand', weight: 0.1 },
@@ -217,15 +217,11 @@ export class Navbar implements OnInit {
           ignoreLocation: true,
           includeScore: true,
           minMatchCharLength: 2,
-        };
-
-        this.fuse = new Fuse(this.allProducts, options);
-      },
-      error: (err) => {
-        console.error('Product Load Error', err);
+        });
       },
     });
 
+    // ✅ Search
     this.product.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe((value) => {
       if (!value?.trim()) {
         this.filteredProducts = [];
@@ -234,8 +230,19 @@ export class Navbar implements OnInit {
 
       if (this.fuse) {
         const results = this.fuse.search(value);
-        this.filteredProducts = results.slice(0, 10).map((result) => result.item);
+        this.filteredProducts = results.slice(0, 10).map((r) => r.item);
       }
+    });
+
+    // ✅ LOAD CART WHEN NAVBAR STARTS
+    this.cartService.getCartFromServer().subscribe({
+      next: (res: any) => {
+        console.log('Navbar Cart =>', res);
+        this.cartService.syncCartFromResponse(res.items);
+      },
+      error: (err) => {
+        console.error(err);
+      },
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,8 +18,9 @@ interface Coupon {
   imports: [CommonModule, FormsModule],
   templateUrl: './checkout.html',
   styleUrls: ['./checkout.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CheckoutComponent implements OnInit {
+export class CheckoutComponent {
   totalAmount = 0;
   discount = 0;
   payableAmount = 0;
@@ -31,64 +32,43 @@ export class CheckoutComponent implements OnInit {
     private cartService: CartService,
     private orderService: OrderService,
     private router: Router,
-  ) {}
+    private cd: ChangeDetectorRef,
+  ) {
+    // Data jo Products page ne save kiya tha
+    const checkoutData = localStorage.getItem('CHECKOUT_DATA');
 
-  ngOnInit(): void {
-    // Load cart items
-    this.cartItems = this.cartService.getCartItems();
+    if (checkoutData) {
+      const res = JSON.parse(checkoutData);
 
-    // Calculate total
-    this.totalAmount = this.cartItems.reduce((sum, item) => {
-      return sum + item.price * (item.quantity || 1);
-    }, 0);
-
-    // Default values
-    this.discount = 0;
-    this.payableAmount = this.totalAmount;
-
-    // Load coupon from localStorage
-   const savedCoupon = localStorage.getItem('appliedCoupon');
-
-   if (savedCoupon) {
-     this.appliedCoupon = JSON.parse(savedCoupon) as Coupon;
-
-     this.discount = this.appliedCoupon.discount;
-     this.payableAmount = this.appliedCoupon.finalAmount;
-   } else {
-     this.discount = 0;
-     this.payableAmount = this.totalAmount;
-   }
-
-    console.log('Cart Items =>', this.cartItems);
-    console.log('Total Amount =>', this.totalAmount);
-    console.log('Coupon =>', this.appliedCoupon);
-    console.log('Discount =>', this.discount);
-    console.log('Payable =>', this.payableAmount);
+      this.cartItems = res.items || [];
+      this.totalAmount = res.totalAmount || 0;
+      this.discount = res.discount || 0;
+      this.payableAmount = res.payableAmount > 0 ? res.payableAmount : this.totalAmount;
+    }
   }
 
   payNow(): void {
-    if (this.cartItems.length === 0) {
-      alert('Your cart is empty.');
+    console.log('PAY NOW CLICKED');
+
+    if (!this.cartItems.length) {
+      alert('Cart is empty');
       return;
     }
 
     const orderData = {
-      items: this.cartItems.map((item) => ({
-        productId: item._id || item.id,
+      items: this.cartItems.map((item: any) => ({
+        productId: item.productId,
         title: item.title,
         price: item.price,
-        quantity: item.quantity || 1,
-        thumbnail: item.thumbnail,
+        quantity: item.quantity,
+        image: item.image,
         category: item.category,
       })),
-
-      totalAmount: this.totalAmount,
-
-      // Backend coupon verify karega
+      totalAmount: this.payableAmount,
       code: this.appliedCoupon?.code || null,
     };
 
-    console.log('ORDER REQUEST =>', orderData);
+    console.log('ORDER DATA =>', orderData);
 
     this.orderService.placeOrder(orderData).subscribe({
       next: (response: any) => {
@@ -96,6 +76,7 @@ export class CheckoutComponent implements OnInit {
 
         this.cartService.clearCart();
 
+        localStorage.removeItem('CHECKOUT_DATA');
         localStorage.removeItem('appliedCoupon');
 
         this.router.navigate(['/order-success'], {
@@ -103,12 +84,12 @@ export class CheckoutComponent implements OnInit {
             orderId: response.data?._id,
           },
         });
-      },
 
+        this.cd.markForCheck();
+      },
       error: (err) => {
         console.error('ORDER ERROR =>', err);
-
-        alert(err.error?.message || 'Failed to place order');
+        alert(err.error?.message || 'Order Failed');
       },
     });
   }

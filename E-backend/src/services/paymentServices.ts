@@ -1,5 +1,6 @@
 import Payment from "../models/paymentModel";
 import Product from "../models/productModel";
+import Cart from "../models/cartModel";
 import { OrderService } from "./orderServices";
 import { CouponService } from "./couponServices";
 import {
@@ -9,38 +10,31 @@ import {
 } from "../types/paymentTypes";
 
 export class PaymentService {
+  // =========================
+  // CREATE PAYMENT (unchanged)
+  // =========================
   async createPayment(data: PaymentRequest): Promise<PaymentResponse> {
-    console.log("🔥 PaymentService is running");
-
     let totalAmount = 0;
 
-    // 1. Calculate Total
     for (const item of data.items) {
       const product: any = await Product.findById(item.productId);
 
-      if (!product) {
-        throw new Error("Product not found");
-      }
+      if (!product) throw new Error("Product not found");
 
       totalAmount += product.price * item.quantity;
     }
 
-    console.log("TOTAL AMOUNT:", totalAmount);
-
-    // 2. Coupon Logic
     let finalAmount = totalAmount;
     let discount = 0;
     let couponCode: string | null = null;
 
-    if (data.couponCode && data.couponCode.trim()) {
+    if (data.couponCode?.trim()) {
       const couponService = new CouponService();
 
       const coupon = await couponService.applyCoupon(
         data.couponCode,
         totalAmount,
       );
-
-      console.log("COUPON FOUND:", coupon);
 
       if (coupon) {
         finalAmount = coupon.finalAmount;
@@ -49,16 +43,11 @@ export class PaymentService {
 
         await couponService.increaseCouponUsage(data.couponCode);
       }
-
-      console.log("FINAL AMOUNT:", finalAmount);
-      console.log("DISCOUNT:", discount);
     }
 
-    // 3. Commission
     const developerAmount = finalAmount * 0.1;
     const shopkeeperAmount = finalAmount * 0.9;
 
-    // 4. Save Payment
     const payment: any = await Payment.create({
       paymentId: "PAY_" + Date.now(),
       amount: finalAmount,
@@ -70,7 +59,6 @@ export class PaymentService {
       shopkeeperAmount,
     });
 
-    // 5. CREATE ORDER
     const orderService = new OrderService();
 
     await orderService.createOrder({
@@ -79,10 +67,9 @@ export class PaymentService {
       developerAmount,
       shopkeeperAmount,
       paymentId: payment.paymentId,
-      couponCode: couponCode,
+      couponCode,
     });
 
-    // 6. RESPONSE
     return {
       success: true,
       paymentId: payment.paymentId,
@@ -97,5 +84,88 @@ export class PaymentService {
       developerAmount,
       shopkeeperAmount,
     } as any;
+  }
+
+  // =========================
+  // CART BASED CHECKOUT SUMMARY (NEW)
+  // =========================
+  async getCheckoutSummary(userId: string, couponCode?: string) {
+    let totalAmount = 0;
+    let discount = 0;
+    let payableAmount = 0;
+
+    const items: any[] = [];
+
+    // 1. Get cart
+    console.log("Searching Cart For User:", userId);
+    const cart = await Cart.findOne({ userId });
+
+
+console.log("Cart Found:", cart);
+
+    if (!cart || cart.items.length === 0) {
+      throw new Error("Cart is empty");
+    }
+
+    // 2. Get products in single query (FAST)
+    const productIds = cart.items.map((i: any) => i.productId);
+
+    const products = await Product.find({
+      _id: { $in: productIds },
+    });
+
+    console.log("Cart Items:", cart.items);
+
+    // 3. Build items + calculate total
+    for (const cartItem of cart.items) {
+      const product: any = products.find(
+        (p: any) => p._id.toString() === cartItem.productId.toString(),
+      );
+
+
+        console.log("Product:", product.title);
+        console.log("Price:", product.price);
+        console.log("Quantity:", cartItem.quantity);
+
+
+      if (!product) {
+        throw new Error("Product not found");
+      }
+
+      const itemTotal = product.price * cartItem.quantity;
+      totalAmount += itemTotal;
+
+      console.log("FINAL TOTAL:", totalAmount);
+
+     items.push({
+       productId: product._id,
+       title: product.title,
+       image: product.image,
+       description: product.description,
+       category: product.category,
+       price: product.price,
+       quantity: cartItem.quantity,
+     });
+    }
+
+    // 4. Coupon service
+    if (couponCode && couponCode.trim()) {
+      const couponService = new CouponService();
+
+      const coupon = await couponService.applyCoupon(couponCode, totalAmount);
+
+      if (coupon) {
+        discount = coupon.discount;
+        payableAmount = coupon.finalAmount;
+      }
+    }
+    // 6. Response
+    return {
+      success: true,
+      items,
+      totalAmount,
+      discount,
+      payableAmount,
+    };
   }
 }

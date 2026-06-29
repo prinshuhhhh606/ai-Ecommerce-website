@@ -11,14 +11,16 @@ export class PaymentService {
 
   constructor(private http: HttpClient) {}
 
+  getCheckoutSummary(userId: string) {
+    return this.http.get(`${this.apiUrl}/api/payment/checkout-summary/${userId}`);
+  }
   walletPayment(amount: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/api/wallet/wallet-payment`, {
       amount,
     });
   }
 
-  // Product Payment
-  createOrder(data: any, customer?: any): Observable<any> {
+  createOrder(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/api/payment/order-payment`, data);
   }
 

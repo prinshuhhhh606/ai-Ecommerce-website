@@ -75,7 +75,12 @@ export class PaymentComponent implements OnInit {
       phone: this.paymentForm.get('customerPhone')?.value,
     };
 
-    this.paymentService.createOrder(amount, customerData).subscribe({
+    const data = {
+      amount,
+      customer: customerData,
+    };
+
+    this.paymentService.createOrder(data).subscribe({
       next: (response: any) => {
         console.log('PAYMENT RESPONSE =>', response);
 

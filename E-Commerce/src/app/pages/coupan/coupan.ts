@@ -24,24 +24,22 @@ export class CouponComponent implements OnInit {
 
   appliedCoupon: any = null;
 
-  totalAmount = 0;
+  cartItems: any[] = [];
+  totalAmount: number = 0;
 
   constructor(
     private couponService: CouponService,
     private cartService: CartService,
     private router: Router,
   ) {}
-
   ngOnInit(): void {
     this.loadCoupons();
 
-    const cartItems = this.cartService.getCartItems();
+    this.cartItems = this.cartService.getCartItems();
 
-    this.totalAmount = cartItems.reduce((sum: number, item: any) => {
+    this.totalAmount = this.cartItems.reduce((sum: number, item: any) => {
       return sum + item.price * (item.quantity || 1);
     }, 0);
-
-    console.log('TOTAL =', this.totalAmount);
   }
 
   loadCoupons() {
