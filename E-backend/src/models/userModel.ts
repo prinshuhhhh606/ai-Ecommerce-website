@@ -8,6 +8,12 @@ export interface IUser extends Document {
 
   referralCode: string;
 
+  // Kis referral code se register hua
+  referredBy: string | null;
+
+  // Reward diya gaya ya nahi
+  referralRewardGiven: boolean;
+
   wallet: {
     balance: number;
     credit: number;
@@ -42,6 +48,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       unique: true,
       required: true,
+    },
+
+    // Referral code used during signup
+    referredBy: {
+      type: String,
+      default: null,
+    },
+
+    // Prevent duplicate rewards
+    referralRewardGiven: {
+      type: Boolean,
+      default: false,
     },
 
     wallet: {

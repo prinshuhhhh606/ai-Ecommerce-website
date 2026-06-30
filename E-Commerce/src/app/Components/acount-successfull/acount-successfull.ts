@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AccountService } from '../../core/services/accountRef.service'; // Path apne project ke hisaab se change karein
 import { ChangeDetectorRef,ChangeDetectionStrategy } from '@angular/core';
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-account-created',
   standalone: true,
@@ -30,6 +31,10 @@ export class AccountCreatedComponent implements OnInit {
       next: (res: any) => {
         console.log(res);
         console.log('Account Success Response:', res);
+         console.log(res);
+         console.log('Account Success Response:', res);
+         console.log('Name:', res.data.name);
+         console.log('Referral:', res.data.referralCode);
 
         console.log('Name:', res.data.name);
         console.log('Referral:', res.data.referralCode);
@@ -57,7 +62,12 @@ export class AccountCreatedComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  shareReferral(): void {
-    this.router.navigate(['/referral-success']);
+  shareReferral() {
+     console.log('Share button clicked');
+    const referralLink = `${window.location.origin}/register?ref=${this.referralCode}`;
+
+    const message = `🎉 Join using my referral link\n\n${referralLink}`;
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   }
 }

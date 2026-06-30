@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/services/auth.services';
 
 @Component({
@@ -10,38 +10,50 @@ import { AuthService } from '../../core/services/auth.services';
   templateUrl: './register.html',
   styleUrls: ['./register.css'],
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   registerForm = new FormGroup({
     name: new FormControl(''),
     email: new FormControl(''),
     password: new FormControl(''),
+    referralCode: new FormControl(''),
   });
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      const ref = params['ref'];
+
+      if (ref) {
+        // IMPORTANT: use setValue for disabled control
+        this.registerForm.get('referralCode')?.setValue(ref);
+
+        console.log('Referral Code:', ref);
+      }
+    });
+  }
+
   register() {
-  console.log('FORM DATA =>', this.registerForm.value);
+    // IMPORTANT: use getRawValue() to include disabled fields
+    const formData = this.registerForm.getRawValue();
 
-    this.authService.register(this.registerForm.value).subscribe({
-  next: (res: any) => {
-  console.log('REGISTER SUCCESS =>', res);
+    console.log('FORM DATA =>', formData);
 
-  // Token save karo
-  this.authService.saveToken(res.token);
+    this.authService.register(formData).subscribe({
+      next: (res: any) => {
+        console.log('REGISTER SUCCESS =>', res);
 
-  // Account Created page par jao
-  this.router.navigate(['/account-created']);
-},
+        this.authService.saveToken(res.token);
 
+        this.router.navigate(['/account-created']);
+      },
 
       error: (err) => {
         console.log('FULL ERROR =>', err);
-        console.log('err.error =>', err.error);
-        console.log('inner error =>', err.error?.error);
-        console.log('message =>', err.error?.error?.message);
-        console.log('stack =>', err.error?.error?.stack);
       },
     });
   }

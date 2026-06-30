@@ -5,10 +5,9 @@ import { generateReferralCode } from "../utils/generateReferralCode";
 import mongoose from "mongoose";
 
 export const register = async (req: any, res: any) => {
+    console.log("===== REGISTER API CALLED =====");
   try {
-    const { name, email, password } = req.body;
-
-    console.log("Request Body:", req.body);
+    const { name, email, password, referralCode: usedReferralCode } = req.body;
 
     // Validation
     if (!name || !email || !password) {
@@ -18,12 +17,9 @@ export const register = async (req: any, res: any) => {
       });
     }
 
-    console.log("Mongo Ready State:", mongoose.connection.readyState);
-    console.log("Model Name:", User.modelName);
-    console.log("Collection:", User.collection.name);
-
-    // Check existing user
+    // Existing user check
     const existingUser = await User.findOne({ email });
+    
 
     if (existingUser) {
       return res.status(400).json({
@@ -35,21 +31,54 @@ export const register = async (req: any, res: any) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate referral code
+    // Generate referral code for new user
     const referralCode = generateReferralCode(name);
 
     // Create user
-    const user = await User.create({
+    const user = new User({
       name,
       email,
       password: hashedPassword,
       referralCode,
+      referredBy: usedReferralCode || null,
     });
 
-    // Generate JWT Token
-    const token = generateToken(user.id);
+    console.log("Used Referral Code:", usedReferralCode);
 
-    // Response
+    // Referral reward
+    
+    if (usedReferralCode) {
+      const referrer = await User.findOne({
+        referralCode: usedReferralCode,
+      });
+
+console.log("Referrer Found:", referrer);
+
+      if (referrer) {
+        // Referrer reward
+        referrer.wallet.balance += 50;
+        referrer.wallet.credit += 50;
+
+        await referrer.save();
+
+        // New user reward
+        user.wallet.balance += 50;
+        user.wallet.credit += 50;
+
+        user.referralRewardGiven = true;
+      }
+      console.log("Before Reward");
+      console.log("Referrer Wallet:", referrer?.wallet);
+      console.log("New User Wallet:", user.wallet);
+    }
+    
+
+    // Save user
+    await user.save();
+
+    // Generate JWT
+    const token = generateToken(user._id.toString());
+
     return res.status(201).json({
       success: true,
       message: "User registered successfully",
@@ -61,6 +90,7 @@ export const register = async (req: any, res: any) => {
         email: user.email,
         role: user.role,
         referralCode: user.referralCode,
+        referredBy: user.referredBy,
         wallet: user.wallet,
       },
     });
@@ -86,6 +116,7 @@ export const login = async (req: any, res: any) => {
     }
 
     const user = await User.findOne({ email });
+    
 
     if (!user) {
       return res.status(404).json({
