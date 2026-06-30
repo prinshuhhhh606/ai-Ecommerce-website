@@ -1,15 +1,16 @@
 import User from "../models/userModel";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generatetoken";
+import { generateReferralCode } from "../utils/generateReferralCode";
 import mongoose from "mongoose";
 
-// REGISTER
 export const register = async (req: any, res: any) => {
   try {
     const { name, email, password } = req.body;
 
     console.log("Request Body:", req.body);
 
+    // Validation
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -17,16 +18,12 @@ export const register = async (req: any, res: any) => {
       });
     }
 
-    console.log("Checking existing user...");
-
     console.log("Mongo Ready State:", mongoose.connection.readyState);
     console.log("Model Name:", User.modelName);
     console.log("Collection:", User.collection.name);
-    console.log("Checking existing user...");
-    console.log("Mongo Ready State:", mongoose.connection.readyState);
-    const existingUser = await User.findOne({ email });
 
-    console.log("findOne completed");
+    // Check existing user
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(400).json({
@@ -35,18 +32,37 @@ export const register = async (req: any, res: any) => {
       });
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Generate referral code
+    const referralCode = generateReferralCode(name);
+
+    // Create user
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
+      referralCode,
     });
 
+    // Generate JWT Token
+    const token = generateToken(user.id);
+
+    // Response
     return res.status(201).json({
       success: true,
       message: "User registered successfully",
-      user,
+      token,
+      referralCode: user.referralCode,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        referralCode: user.referralCode,
+        wallet: user.wallet,
+      },
     });
   } catch (error: any) {
     console.error("REGISTER ERROR =>", error);
@@ -57,13 +73,10 @@ export const register = async (req: any, res: any) => {
     });
   }
 };
+// LOGIN
 export const login = async (req: any, res: any) => {
   try {
     const { email, password } = req.body;
-
-    console.log("========== LOGIN ==========");
-    console.log("Request Body:", req.body);
-    console.log("Mongo State:", mongoose.connection.readyState);
 
     if (!email || !password) {
       return res.status(400).json({
@@ -74,8 +87,6 @@ export const login = async (req: any, res: any) => {
 
     const user = await User.findOne({ email });
 
-    console.log("User Found:", user);
-
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -84,8 +95,6 @@ export const login = async (req: any, res: any) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-
-    console.log("Password Match:", isMatch);
 
     if (!isMatch) {
       return res.status(401).json({
@@ -103,15 +112,14 @@ export const login = async (req: any, res: any) => {
       user,
     });
   } catch (error: any) {
-    console.error("LOGIN ERROR =>", error);
-
     return res.status(500).json({
       success: false,
       message: error.message,
-      stack: error.stack,
     });
   }
 };
+
+// GET PROFILE
 export const getProfile = async (req: any, res: any) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -128,3 +136,33 @@ export const getProfile = async (req: any, res: any) => {
   }
 };
 
+// ACCOUNT SUCCESS
+export const getAccountSuccess = async (req: any, res: any) => {
+  try {
+    const user = await User.findById(req.user.id).select(
+      "name email referralCode",
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Account details fetched successfully",
+      data: {
+        name: user.name,
+        email: user.email,
+        referralCode: user.referralCode,
+      },
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

@@ -22,13 +22,19 @@ export class RegisterComponent {
     password: new FormControl(''),
   });
   register() {
-    console.log('FORM DATA =>', this.registerForm.value);
+  console.log('FORM DATA =>', this.registerForm.value);
 
     this.authService.register(this.registerForm.value).subscribe({
-     next: (res: any) => {
+  next: (res: any) => {
   console.log('REGISTER SUCCESS =>', res);
+
+  // Token save karo
+  this.authService.saveToken(res.token);
+
+  // Account Created page par jao
   this.router.navigate(['/account-created']);
 },
+
 
       error: (err) => {
         console.log('FULL ERROR =>', err);

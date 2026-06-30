@@ -6,6 +6,8 @@ export interface IUser extends Document {
   password: string;
   role: string;
 
+  referralCode: string;
+
   wallet: {
     balance: number;
     credit: number;
@@ -34,6 +36,12 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       default: "user",
+    },
+
+    referralCode: {
+      type: String,
+      unique: true,
+      required: true,
     },
 
     wallet: {
