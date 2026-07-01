@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.services';
+import { CartService } from '../../core/services/cart.services';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ export class LoginComponent {
   constructor(
     private router: Router,
     private authService: AuthService,
+    private cartService: CartService,
   ) {}
 
   logControl = new FormGroup({
@@ -24,16 +26,28 @@ export class LoginComponent {
   Login() {
     this.authService.login(this.logControl.value).subscribe({
       next: (res: any) => {
-       
-          console.log('LOGIN RESPONSE =>', res);
-          console.log('USER =>', res.user);
+        console.log('LOGIN RESPONSE =>', res);
 
         localStorage.setItem('token', res.token);
-
         localStorage.setItem('user', JSON.stringify(res.user));
-         localStorage.setItem('userId', res.user._id);
+        localStorage.setItem('userId', res.user._id);
 
-        this.router.navigate(['/']);
+        // Login के बाद server से cart fetch करो
+        this.cartService.getCartFromServer().subscribe({
+          next: (cartRes: any) => {
+            console.log('CART RESPONSE =>', cartRes);
+
+            this.cartService.syncCartFromResponse(cartRes.items);
+
+            this.router.navigate(['/']);
+          },
+          error: (err) => {
+            console.log('CART ERROR =>', err);
+
+            // अगर cart fetch न हो तब भी login हो चुका है
+            this.router.navigate(['/']);
+          },
+        });
       },
 
       error: (err) => {
@@ -41,8 +55,7 @@ export class LoginComponent {
       },
     });
   }
-
-  register(){
-    this.router.navigate(['/register'])
+  register() {
+    this.router.navigate(['/register']);
   }
 }

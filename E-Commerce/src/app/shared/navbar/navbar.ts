@@ -305,12 +305,30 @@ export class Navbar implements OnInit {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    this.isLoggedIn = false;
-    this.router.navigate(['/login']);
+    this.authService.logout().subscribe({
+      next: () => {
+        this.clearSession();
+      },
+      error: (err) => {
+        console.error(err);
+
+        // Backend error होने पर भी frontend logout कर दो
+        this.clearSession();
+      },
+    });
   }
 
+  private clearSession(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('userId');
+
+    this.cartService.clearCart();
+
+    this.isLoggedIn = false;
+
+    this.router.navigate(['/login']);
+  }
   startVoiceSearch(): void {
     const SpeechRecognition =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;

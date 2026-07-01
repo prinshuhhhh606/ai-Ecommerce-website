@@ -1,7 +1,5 @@
 <div class="register-container">
-
   <div class="register-card">
-
     <div class="register-header">
       <div class="logo">
         <i class="fa-solid fa-bag-shopping"></i>
@@ -9,61 +7,40 @@
 
       <h2>Create Account</h2>
 
-      <p>
-        Join ShopEase and start shopping smarter
-      </p>
+      <p>Join ShopEase and start shopping smarter</p>
     </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="register()">
-
       <div class="input-group">
         <label>Full Name</label>
-        <input
-          type="text"
-          placeholder="John Doe"
-          formControlName="name"
-        />
+        <input type="text" placeholder="John Doe" formControlName="name" />
       </div>
 
       <div class="input-group">
         <label>Email Address</label>
-        <input
-          type="email"
-          placeholder="john@example.com"
-          formControlName="email"
-        />
+        <input type="email" placeholder="john@example.com" formControlName="email" />
       </div>
 
       <div class="input-group">
         <label>Password</label>
-        <input
-          type="password"
-          placeholder="••••••••"
-          formControlName="password"
-        />
+        <input type="password" placeholder="••••••••" formControlName="password" />
       </div>
 
       <!-- Referral Code -->
       <div class="input-group">
         <label>Referral Code (Optional)</label>
-       <input
-  type="text"
-  placeholder="Referral Code"
-  formControlName="referralCode"
-/>
+        <input type="text" placeholder="Referral Code" formControlName="referralCode"   (input)="applyReferral()" />
+          <p class="success-message" *ngIf="referralApplied">
+    Referral Code Applied Successfully
+  </p>
       </div>
 
-      <button type="submit" class="register-btn">
-        Create Account
-      </button>
-
+      <button type="submit" class="register-btn">Create Account</button>
     </form>
 
     <div class="login-link">
       Already have an account?
       <a routerLink="/login">Login</a>
     </div>
-
   </div>
-
 </div>

@@ -2,15 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/services/auth.services';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './register.html',
   styleUrls: ['./register.css'],
 })
 export class RegisterComponent implements OnInit {
+  referralApplied: boolean = false;
+  referralMessage: string = '';
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -54,6 +59,29 @@ export class RegisterComponent implements OnInit {
 
       error: (err) => {
         console.log('FULL ERROR =>', err);
+      },
+    });
+  }
+
+  applyReferral() {
+    const code = this.registerForm.get('referralCode')?.value?.trim();
+
+    console.log('Referral Code:', code);
+
+    if (!code) {
+      this.referralApplied = false;
+      this.referralMessage = '';
+      return;
+    }
+
+    this.authService.verifyReferral(code).subscribe({
+      next: (res: any) => {
+        this.referralApplied = true;
+        this.referralMessage = res.message;
+      },
+      error: (err) => {
+        this.referralApplied = false;
+        this.referralMessage = err.error.message;
       },
     });
   }

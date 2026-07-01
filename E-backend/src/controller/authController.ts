@@ -5,7 +5,7 @@ import { generateReferralCode } from "../utils/generateReferralCode";
 import mongoose from "mongoose";
 
 export const register = async (req: any, res: any) => {
-    console.log("===== REGISTER API CALLED =====");
+  console.log("===== REGISTER API CALLED =====");
   try {
     const { name, email, password, referralCode: usedReferralCode } = req.body;
 
@@ -19,7 +19,6 @@ export const register = async (req: any, res: any) => {
 
     // Existing user check
     const existingUser = await User.findOne({ email });
-    
 
     if (existingUser) {
       return res.status(400).json({
@@ -46,32 +45,35 @@ export const register = async (req: any, res: any) => {
     console.log("Used Referral Code:", usedReferralCode);
 
     // Referral reward
-    
-    if (usedReferralCode) {
+
+    // Verify Referral Code
+    if (usedReferralCode && usedReferralCode.trim() !== "") {
+      console.log("Used Referral Code:", usedReferralCode);
       const referrer = await User.findOne({
-        referralCode: usedReferralCode,
+        referralCode: usedReferralCode.trim(),
       });
 
-console.log("Referrer Found:", referrer);
+      console.log("Referrer Found:", referrer);
 
-      if (referrer) {
-        // Referrer reward
-        referrer.wallet.balance += 50;
-        referrer.wallet.credit += 50;
-
-        await referrer.save();
-
-        // New user reward
-        user.wallet.balance += 50;
-        user.wallet.credit += 50;
-
-        user.referralRewardGiven = true;
+      // ❌ Invalid Referral Code
+      if (!referrer) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid Referral Code",
+        });
       }
-      console.log("Before Reward");
-      console.log("Referrer Wallet:", referrer?.wallet);
-      console.log("New User Wallet:", user.wallet);
+
+      // ✅ Valid Referral Code → Give Reward
+      referrer.wallet.balance += 50;
+      referrer.wallet.credit += 50;
+
+      await referrer.save();
+
+      user.wallet.balance += 50;
+      user.wallet.credit += 50;
+
+      user.referralRewardGiven = true;
     }
-    
 
     // Save user
     await user.save();
@@ -116,7 +118,6 @@ export const login = async (req: any, res: any) => {
     }
 
     const user = await User.findOne({ email });
-    
 
     if (!user) {
       return res.status(404).json({
@@ -189,6 +190,68 @@ export const getAccountSuccess = async (req: any, res: any) => {
         email: user.email,
         referralCode: user.referralCode,
       },
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+
+export const verifyReferral = async (req: any, res: any) => {
+  try {
+   const { referralCode } = req.body;
+
+   const code = referralCode?.trim();
+
+    // Referral code empty
+    if (!referralCode) {
+      return res.status(400).json({
+        success: false,
+        message: "Referral Code is required",
+      });
+    }
+
+    // Database check
+    const referrer = await User.findOne({
+      referralCode: referralCode,
+    });
+
+    // Invalid referral code
+    if (!referrer) {
+      return res.status(404).json({
+        success: false,
+        message: "Invalid Referral Code",
+      });
+    }
+
+    // Valid referral code
+    return res.status(200).json({
+      success: true,
+      message: "Referral Code Applied Successfully",
+      referrer: {
+        id: referrer._id,
+        name: referrer.name,
+        referralCode: referrer.referralCode,
+      },
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// LOGOUT
+export const logout = async (req: any, res: any) => {
+  try {
+    return res.status(200).json({
+      success: true,
+      message: "Logout successful",
     });
   } catch (error: any) {
     return res.status(500).json({

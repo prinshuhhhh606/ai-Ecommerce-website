@@ -14,6 +14,9 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, data);
   }
 
+  logout(){
+    return this.http.post(`${this.apiUrl}/logout`, {});
+  }
   register(data: any) {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
@@ -26,9 +29,7 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  logout() {
-    localStorage.removeItem('token');
-  }
+  
 
   getProfile() {
     return this.http.get(`${this.apiUrl}/me`);
@@ -36,5 +37,8 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+  verifyReferral(code: string) {
+    return this.http.post(`${this.apiUrl}/verify-referral`, { referralCode: code });
   }
 }
