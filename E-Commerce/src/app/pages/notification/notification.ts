@@ -15,10 +15,12 @@ export class NotificationComponent implements OnInit {
   constructor(private notificationService: NotificationService) {}
 
   ngOnInit(): void {
+     console.log('Notification Component Loaded');
     this.loadNotifications();
   }
 
   loadNotifications() {
+      console.log('Calling Notification API...');
     this.notificationService.getNotifications().subscribe({
       next: (res: any) => {
         this.notifications = res.notifications;
