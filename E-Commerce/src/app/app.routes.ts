@@ -27,6 +27,7 @@ import { AccountCreatedComponent } from './Components/acount-successfull/acount-
 
 
 import { NotificationComponent } from  './pages/notification/notification'
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -44,14 +45,17 @@ export const routes: Routes = [
   {
     path: 'checkout',
     component: CheckoutComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'payment',
     component: PaymentComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'my-orders',
     component: OrdersComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'user',
@@ -80,6 +84,7 @@ export const routes: Routes = [
   {
     path: 'wishlist',
     component: Wishlist,
+    canActivate: [authGuard],
   },
   {
     path: 'banner',
@@ -91,27 +96,28 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: DashboardComponent
+    component: DashboardComponent,
   },
   {
     path: 'coupan',
-    component: CouponComponent
+    component: CouponComponent,
   },
   {
     path: 'wallet',
-    component: WalletComponent
+    component: WalletComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'referral',
-    component: ReferralComponent
+    component: ReferralComponent,
   },
   {
     path: 'account-created',
-    component: AccountCreatedComponent
+    component: AccountCreatedComponent,
   },
   {
     path: 'notifications',
-    component: NotificationComponent
-  }
- 
+    component: NotificationComponent,
+    canActivate: [authGuard],
+  },
 ];
