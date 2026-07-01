@@ -43,7 +43,6 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    // IMPORTANT: use getRawValue() to include disabled fields
     const formData = this.registerForm.getRawValue();
 
     console.log('FORM DATA =>', formData);
@@ -51,20 +50,29 @@ export class RegisterComponent implements OnInit {
     this.authService.register(formData).subscribe({
       next: (res: any) => {
         console.log('REGISTER SUCCESS =>', res);
+        console.log('rewardApplied =>', res.rewardApplied);
+        console.log('rewardAmount =>', res.rewardAmount);
 
         this.authService.saveToken(res.token);
+
+        localStorage.setItem('rewardApplied', JSON.stringify(res.rewardApplied));
+
+        localStorage.setItem('rewardAmount', JSON.stringify(res.rewardAmount));
+
+        console.log('Saved rewardApplied =', localStorage.getItem('rewardApplied'));
+
+        console.log('Saved rewardAmount =', localStorage.getItem('rewardAmount'));
 
         this.router.navigate(['/account-created']);
       },
 
       error: (err) => {
-        console.log('FULL ERROR =>', err);
+        console.log('REGISTER ERROR =>', err);
       },
     });
   }
-
   applyReferral() {
-    const code = this.registerForm.get('referralCode')?.value?.trim();
+    const code = (this.registerForm.get('referralCode')?.value || '').trim();
 
     console.log('Referral Code:', code);
 

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Cart from "../models/cartModel";
 import Product from "../models/productModel";
 import { CartService } from "../services/cartServices";
+import mongoose from "mongoose";
 
 // ========================
 // ADD TO CART
@@ -62,10 +63,18 @@ export const addToCart = async (req: Request, res: Response) => {
 // GET CART
 export const getCart = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const userId = req.params.userId as string;
+
+    // ✅ Validate UserId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid User Id",
+      });
+    }
 
     const cart: any = await Cart.findOne({ userId }).populate(
-      "items.productId"
+      "items.productId",
     );
 
     if (!cart) {
@@ -81,12 +90,13 @@ export const getCart = async (req: Request, res: Response) => {
     const items = cart.items
       .map((item: any) => {
         const product = item.productId;
-if (!product) return null;
 
-const price = Number(product.price ?? 0);
-const qty = Number(item.quantity ?? 0);
+        if (!product) return null;
 
-const itemTotal = price * qty;
+        const price = Number(product.price ?? 0);
+        const qty = Number(item.quantity ?? 0);
+
+        const itemTotal = price * qty;
         totalAmount += itemTotal;
 
         return {
@@ -116,7 +126,6 @@ const itemTotal = price * qty;
     });
   }
 };
-
 
 // ========================
 // REMOVE FROM CART

@@ -3,11 +3,16 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generatetoken";
 import { generateReferralCode } from "../utils/generateReferralCode";
 import mongoose from "mongoose";
-
 export const register = async (req: any, res: any) => {
-  console.log("===== REGISTER API CALLED =====");
   try {
-    const { name, email, password, referralCode: usedReferralCode } = req.body;
+    const {
+      name,
+      email,
+      password,
+      referralCode: usedReferralCodeRaw,
+    } = req.body;
+
+    const usedReferralCode = usedReferralCodeRaw?.trim();
 
     // Validation
     if (!name || !email || !password) {
@@ -17,7 +22,7 @@ export const register = async (req: any, res: any) => {
       });
     }
 
-    // Existing user check
+    // Existing User
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -27,65 +32,75 @@ export const register = async (req: any, res: any) => {
       });
     }
 
-    // Hash password
+    // Hash Password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate referral code for new user
+    // Generate New User Referral Code
     const referralCode = generateReferralCode(name);
 
-    // Create user
-    const user = new User({
-      name,
-      email,
-      password: hashedPassword,
-      referralCode,
-      referredBy: usedReferralCode || null,
-    });
+    // Find Referrer
+    let referrer: any = null;
 
-    console.log("Used Referral Code:", usedReferralCode);
+    if (usedReferralCode) {
+      if (usedReferralCode === referralCode) {
+        return res.status(400).json({
+          success: false,
+          message: "You cannot use your own referral code",
+        });
+      }
 
-    // Referral reward
-
-    // Verify Referral Code
-    if (usedReferralCode && usedReferralCode.trim() !== "") {
-      console.log("Used Referral Code:", usedReferralCode);
-      const referrer = await User.findOne({
-        referralCode: usedReferralCode.trim(),
+      referrer = await User.findOne({
+        referralCode: usedReferralCode,
       });
 
-      console.log("Referrer Found:", referrer);
-
-      // ❌ Invalid Referral Code
       if (!referrer) {
         return res.status(400).json({
           success: false,
           message: "Invalid Referral Code",
         });
       }
+    }
 
-      // ✅ Valid Referral Code → Give Reward
+    // Create User
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      referralCode,
+      referredBy: referrer ? referrer._id : null,
+      wallet: {
+        balance: 0,
+        credit: 0,
+        debit: 0,
+      },
+      referralRewardGiven: false,
+    });
+
+    // Give Reward
+    if (referrer) {
       referrer.wallet.balance += 50;
       referrer.wallet.credit += 50;
-
-      await referrer.save();
 
       user.wallet.balance += 50;
       user.wallet.credit += 50;
 
       user.referralRewardGiven = true;
+
+      await referrer.save();
     }
 
-    // Save user
+    // Save User
     await user.save();
 
-    // Generate JWT
+    // Generate Token
     const token = generateToken(user._id.toString());
 
     return res.status(201).json({
       success: true,
       message: "User registered successfully",
       token,
-      referralCode: user.referralCode,
+      rewardApplied: user.referralRewardGiven,
+      rewardAmount: user.wallet.credit,
       user: {
         _id: user._id,
         name: user.name,

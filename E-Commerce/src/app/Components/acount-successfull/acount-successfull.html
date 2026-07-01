@@ -1,62 +1,94 @@
-<div class="success-container">
+<div class="success-page">
 
-  <div class="success-icon">
-    ✓
-  </div>
+  <div class="success-card">
 
-  <h1>Welcome, {{userName}}!</h1>
+    <div class="success-icon">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
 
-  <p class="subtitle">
-    Your account has been created successfully.
-  </p>
+    <h1>Welcome, {{ userName }} 🎉</h1>
 
-  <div class="referral-card">
-
-    <div class="gift-icon">🎁</div>
-
-    <h3>Your Referral Code is Ready!</h3>
-
-    <p>
-      Share your code with friends and earn exciting rewards.
+    <p class="subtitle">
+      Your account has been created successfully.
     </p>
 
-    <div class="code-box">
-      <span>{{ referralCode }}</span>
+    <!-- Reward -->
+    <div class="reward-card" *ngIf="rewardApplied">
 
-      <button (click)="copyCode()">
-        📋
+      <div class="reward-header">
+        🎁 Congratulations!
+      </div>
+
+      <h2>₹{{ rewardAmount }}</h2>
+
+      <p>
+        has been credited to your Wallet for using a referral code.
+      </p>
+
+    </div>
+
+    <!-- Referral -->
+    <div class="referral-card">
+
+      <h3>Your Referral Code</h3>
+
+      <div class="referral-code">
+
+        <span>{{ referralCode }}</span>
+
+        <button (click)="copyCode()">
+          <i class="fa-regular fa-copy"></i>
+        </button>
+
+      </div>
+
+      <small>
+        Share your code with friends and earn ₹50 for every successful signup.
+      </small>
+
+    </div>
+
+    <!-- Only if reward not received -->
+    <div class="steps" *ngIf="!rewardApplied">
+
+      <h3>How Referral Works</h3>
+
+      <div class="step">
+        <span>1</span>
+        Share your referral code
+      </div>
+
+      <div class="step">
+        <span>2</span>
+        Friend registers using your code
+      </div>
+
+      <div class="step">
+        <span>3</span>
+        You both earn ₹50
+      </div>
+
+    </div>
+
+    <div class="buttons">
+
+      <button class="primary-btn"
+              (click)="exploreNow()">
+        Continue Shopping
       </button>
+
+      <button class="secondary-btn"
+              (click)="goToWallet()">
+        View Wallet
+      </button>
+
+      <button class="outline-btn"
+              (click)="shareReferral()">
+        Share Referral
+      </button>
+
     </div>
 
   </div>
-
-  <div class="next-section">
-
-    <h3>What's Next?</h3>
-
-    <div class="step">
-      <span>🛍️</span>
-      <p>Share your code or link with friends.</p>
-    </div>
-
-    <div class="step">
-      <span>🛒</span>
-      <p>They sign up and place their first order.</p>
-    </div>
-
-    <div class="step">
-      <span>🎁</span>
-      <p>You both get rewards!</p>
-    </div>
-
-  </div>
-
-  <button class="explore-btn" (click)="exploreNow()">
-    Explore Now
-  </button>
-
-  <button class="share-btn" (click)="shareReferral()">
-    Share Referral Code
-  </button>
 
 </div>

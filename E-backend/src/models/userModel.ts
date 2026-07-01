@@ -52,9 +52,10 @@ const userSchema = new mongoose.Schema(
 
     // Referral code used during signup
     referredBy: {
-      type: String,
-      default: null,
-    },
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+  default: null,
+},
 
     // Prevent duplicate rewards
     referralRewardGiven: {

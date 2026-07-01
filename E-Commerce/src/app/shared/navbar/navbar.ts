@@ -329,6 +329,8 @@ export class Navbar implements OnInit {
 
     this.router.navigate(['/login']);
   }
+
+  
   startVoiceSearch(): void {
     const SpeechRecognition =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;

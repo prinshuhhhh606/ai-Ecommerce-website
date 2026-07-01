@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, EMPTY } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 
@@ -21,6 +21,10 @@ export class CartService {
   // ✅ GET CART FROM SERVER
   getCartFromServer() {
     const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      return EMPTY;
+    }
 
     return this.http.get(`${environment.apiUrl}/api/cart/${userId}`);
   }
