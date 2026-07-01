@@ -2,6 +2,9 @@ import User from "../models/userModel";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generatetoken";
 import { generateReferralCode } from "../utils/generateReferralCode";
+
+import Notification from "../models/notificationsModel";
+import RewardModel from "../models/rewardModel";
 import mongoose from "mongoose";
 export const register = async (req: any, res: any) => {
   try {
@@ -77,6 +80,7 @@ export const register = async (req: any, res: any) => {
     });
 
     // Give Reward
+    // Give Reward
     if (referrer) {
       referrer.wallet.balance += 50;
       referrer.wallet.credit += 50;
@@ -91,6 +95,42 @@ export const register = async (req: any, res: any) => {
 
     // Save User
     await user.save();
+if (referrer) {
+  // Reward history for referrer
+  await RewardModel.create({
+    sender: user._id,
+    receiver: referrer._id,
+    amount: 50,
+    type: "Referral Reward",
+  });
+
+  // Reward history for new user
+  await RewardModel.create({
+    sender: referrer._id,
+    receiver: user._id,
+    amount: 50,
+    type: "Referral Reward",
+  });
+}
+    // Create Notifications
+    if (referrer) {
+      // Notification for referrer
+      await Notification.create({
+        user: referrer._id,
+        title: "Referral Reward",
+        message: `${user.name} joined using your referral code. ₹50 has been credited to your wallet.`,
+      });
+
+      // Notification for new user
+      await Notification.create({
+        user: user._id,
+        title: "Referral Reward",
+        message:
+          "Congratulations! ₹50 has been credited to your wallet for using a referral code.",
+      });
+    }
+
+
 
     // Generate Token
     const token = generateToken(user._id.toString());
@@ -124,6 +164,8 @@ export const register = async (req: any, res: any) => {
 export const login = async (req: any, res: any) => {
   try {
     const { email, password } = req.body;
+        console.log("Email received:", email);
+
 
     if (!email || !password) {
       return res.status(400).json({
@@ -133,6 +175,7 @@ export const login = async (req: any, res: any) => {
     }
 
     const user = await User.findOne({ email });
+ console.log("User found:", user);
 
     if (!user) {
       return res.status(404).json({

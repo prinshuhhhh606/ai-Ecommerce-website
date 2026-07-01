@@ -42,7 +42,9 @@
     <li>
       <a class="wishlist" (click)="wishlist()"> ❤️ Wishlist </a>
     </li>
-
+    <li>
+      <a routerLink="/notifications"> 🔔 </a>
+    </li>
     <li class="admin-menu">
       <a class="admin-btn"> 📊 Admin <i class="fa-solid fa-caret-down"></i> </a>
 
@@ -57,7 +59,6 @@
 
         <li><a routerLink="/admin/wallets" (click)="ShowWallet()">Wallets</a></li>
         <li><a routerLink="/admin/users" (click)="AIsearch()">Ai-Search</a></li>
-        
       </ul>
     </li>
   </ul>
@@ -67,9 +68,9 @@
     <div class="cart" (click)="cart()">
       🛒
 
-     <span class="cart-count">
-  {{ (cartService.cart$ | async)?.length || 0 }}
-</span>
+      <span class="cart-count">
+        {{ (cartService.cart$ | async)?.length || 0 }}
+      </span>
     </div>
 
     <button class="login" *ngIf="!isLoggedIn" (click)="Login()">

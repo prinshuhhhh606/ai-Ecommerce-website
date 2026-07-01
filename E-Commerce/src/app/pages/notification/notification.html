@@ -1,0 +1,46 @@
+<div class="notification-container">
+
+    <div class="notification-header">
+
+        <h2>Notifications</h2>
+
+        <button (click)="markAllRead()">
+            Mark All as Read
+        </button>
+
+    </div>
+
+    <div *ngIf="notifications.length === 0" class="empty">
+
+        <i class="fa-regular fa-bell-slash"></i>
+
+        <p>No Notifications</p>
+
+    </div>
+
+    <div class="notification-card"
+         *ngFor="let notification of notifications"
+         [class.unread]="!notification.read"
+         (click)="markAsRead(notification)">
+
+        <div class="icon">
+
+            <i class="fa-solid fa-bell"></i>
+
+        </div>
+
+        <div class="content">
+
+            <h4>{{notification.title}}</h4>
+
+            <p>{{notification.message}}</p>
+
+            <span>{{notification.date}}</span>
+
+        </div>
+
+        <div *ngIf="!notification.read" class="dot"></div>
+
+    </div>
+
+</div>

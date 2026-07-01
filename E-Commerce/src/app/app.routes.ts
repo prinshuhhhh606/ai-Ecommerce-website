@@ -26,6 +26,8 @@ import { CouponComponent } from './pages/coupan/coupan';
 import { AccountCreatedComponent } from './Components/acount-successfull/acount-successfull';
 
 
+import { NotificationComponent } from  './pages/notification/notification'
+
 export const routes: Routes = [
   {
     path: '',
@@ -107,5 +109,9 @@ export const routes: Routes = [
     path: 'account-created',
     component: AccountCreatedComponent
   },
+  {
+    path: 'notifications',
+    component: NotificationComponent
+  }
  
 ];

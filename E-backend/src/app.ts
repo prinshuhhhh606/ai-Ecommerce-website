@@ -12,6 +12,9 @@ import walletRoutes from './routes/walletRoutes'
 import couponRoutes from "./routes/coupanRoutes";
 import mongoose from "mongoose";
 import cartRoutes from './routes/cartRoutes'
+import notificationRoutes from "./routes/notificationsRoutes";
+
+import rewardRoutes from "./routes/rewardRoutes";
 
 
 const app: Application = express();
@@ -31,9 +34,9 @@ app.use("/api/coupons", couponRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/products", productRoutes);
 // CREATE ORDER (DB)
-
+app.use("/api/notifications", notificationRoutes);
 console.log("ORDER ROUTES REGISTERED");
-
+app.use("/api/rewards", rewardRoutes);
 
 
 export default app;

@@ -2,9 +2,12 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 export const protect = (req: any, res: Response, next: NextFunction) => {
+    console.log("Authorization Header:", req.headers.authorization);
   try {
     const authHeader = req.headers.authorization;
 
+    console.log(req.headers);
+   
     if (!authHeader?.startsWith("Bearer ")) {
       return res.status(401).json({
         success: false,
