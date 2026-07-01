@@ -280,17 +280,23 @@ export class PaginationComponent implements OnInit {
   }
   addToCart(product: any): void {
     console.log('Button Clicked', product);
+  const token = localStorage.getItem('token');
+  if (!token) {
+    this.router.navigate(['/login']);
+    return;
+  }
 
     const body = {
       productId: product._id,
       quantity: 1,
       userId: localStorage.getItem('userId'),
     };
-
+  
     console.log('Sending Body:', body);
 
     this.cartService.addToCart(body).subscribe({
       next: () => {
+
         // Latest cart server se lao
         this.cartService.getCartFromServer().subscribe({
           next: (cart: any) => {
