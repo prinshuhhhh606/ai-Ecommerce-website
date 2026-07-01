@@ -1,1 +1,97 @@
-/* You can add global styles to this file, and also import other style files */
+/* =========================
+   GLOBAL RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  scroll-behavior: smooth;
+  background: #f8f8f8;
+}
+
+/* =========================
+   IMAGES RESPONSIVE
+========================= */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* =========================
+   CONTAINER SYSTEM
+========================= */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 15px;
+}
+
+/* =========================
+   BUTTONS (MOBILE FRIENDLY)
+========================= */
+button {
+  padding: 10px 14px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+/* =========================
+   TEXT DEFAULTS
+========================= */
+h1 { font-size: 28px; }
+h2 { font-size: 24px; }
+h3 { font-size: 20px; }
+p  { font-size: 16px; line-height: 1.5; }
+
+/* =========================
+   PRODUCT GRID (E-COMMERCE)
+========================= */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* TABLET */
+@media (max-width: 992px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; }
+}
+
+/* =========================
+   UTILITY CLASSES
+========================= */
+.hide-mobile {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none;
+  }
+}
